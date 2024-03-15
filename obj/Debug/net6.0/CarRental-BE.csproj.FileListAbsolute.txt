@@ -63,3 +63,4 @@ D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\refint\CarRenta
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.pdb
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.genruntimeconfig.cache
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\ref\CarRental-BE.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.sourcelink.json

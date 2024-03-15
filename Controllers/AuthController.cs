@@ -26,10 +26,18 @@ namespace CarRental_BE.Controllers
                 return Unauthorized("Invalid email or password");
             }
 
-            // Here you can generate and return a JWT token for authentication.
+            // Include user's role in the response data
+            var responseData = new
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = user.Role // Assuming user.Role is an enum value representing the user's role
+            };
 
-            return Ok("Login successful!");
+            // Return response with user data and role
+            return Ok(responseData);
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterVM model)
