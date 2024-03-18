@@ -29,10 +29,11 @@ namespace CarRental_BE.Repositories.User
         public async Task<Entities.User> GetById(long id)
         {
             var user = await _context.Users
-                .Where(x => x.Id == id).FirstOrDefaultAsync();
+                .Where(x => x.Id == id).FirstOrDefaultAsync(); // Convert Id to string
 
             return user;
         }
+
 
         public async Task<Entities.User> Login(LoginVM request)
         {

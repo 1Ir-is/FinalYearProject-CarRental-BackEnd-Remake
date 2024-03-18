@@ -64,3 +64,9 @@ D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.pd
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.genruntimeconfig.cache
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\ref\CarRental-BE.dll
 D:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.sourcelink.json
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+D:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll

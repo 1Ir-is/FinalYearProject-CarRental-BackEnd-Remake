@@ -51,10 +51,5 @@ namespace CarRental_BE.Controllers
 
             return Ok("Registration successful!");
         }
-
-
-        // Since logout generally involves removing the token stored client-side,
-        // it's not typically handled on the server side in token-based authentication.
-        // However, if you're storing any session data server-side, you could clear that session data upon logout.
     }
 }
