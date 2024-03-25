@@ -30,6 +30,7 @@ namespace CarRental_BE.Controllers
             var responseData = new
             {
                 UserId = user.Id,
+                Name = user.Name,
                 Email = user.Email,
                 Role = user.Role // Assuming user.Role is an enum value representing the user's role
             };
