@@ -1,14 +1,15 @@
+using CarRental_BE.Interfaces;
 using CarRental_BE.Repositories.DBContext;
 using CarRental_BE.Repositories.User;
-using Microsoft.EntityFrameworkCore;
+using CarRental_BE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using CarRental_BE.Interfaces;
-using CarRental_BE.Services;
-using CarRental_BE.Entities;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,38 +17,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-/*builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigin", builder =>
-    {
-        builder.WithOrigins("http://localhost:3000") // Update with your frontend URL
-               .AllowAnyHeader()
-               .AllowAnyMethod();
-    });
-});*/
+// Add HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+// Add Swagger/OpenAPI
 builder.Services.AddSwaggerGen();
 
+// Add NewtonsoftJson
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
+// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
 
-
+// Add authentication
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme =
-    options.DefaultChallengeScheme =
-    options.DefaultForbidScheme =
-    options.DefaultScheme =
-    options.DefaultSignInScheme =
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -63,11 +53,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add scoped services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUploadService, UploadService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+// Build the app
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -76,18 +68,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 
 app.UseCors(x => x
      .AllowAnyMethod()
      .AllowAnyHeader()
      .AllowCredentials()
-      //.WithOrigins("https://localhost:44351))
-      .SetIsOriginAllowed(origin => true));
+     .SetIsOriginAllowed(origin => true));
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Create user-content directory if it doesn't exist
+string userContentDirectory = Path.Combine(app.Environment.ContentRootPath, "user-content");
+if (!Directory.Exists(userContentDirectory))
+{
+    Directory.CreateDirectory(userContentDirectory);
+}
 
 app.MapControllers();
 

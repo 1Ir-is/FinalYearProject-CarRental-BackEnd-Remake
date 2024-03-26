@@ -1,5 +1,7 @@
 ﻿using CarRental_BE.Common.Enums;
+using CarRental_BE.Interfaces;
 using CarRental_BE.Models.Auth;
+using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
@@ -11,6 +13,8 @@ namespace CarRental_BE.Repositories.User
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
+        private readonly IUploadService _uploadService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private static string key { get; set; } = "A!9HHhi%XjjYY4YP2@Nob009X";
 
@@ -86,6 +90,28 @@ namespace CarRental_BE.Repositories.User
             var res = await _context.SaveChangesAsync() > 0;
 
             return res;
+        }
+
+        public async Task EditInfoUser(UserEditVM vm)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == vm.userId);
+
+/*            var avatar = user.Avatar;*/
+            user.Name = vm.Name;
+            user.Address = vm.Address;
+            user.Phone = vm.Phone;
+/*
+            if (vm.Image != null)
+            {
+                user.Avatar = await _uploadService.SaveFile(vm.Image);
+                await _uploadService.DeleteFile(avatar);
+            }*/
+            _context.Users.Update(user);
+            var success = await _context.SaveChangesAsync() > 0;
+            _httpContextAccessor.HttpContext.Session.SetString("Name", user.Name);
+/*            _httpContextAccessor.HttpContext.Session.SetString("Avatar", user.Avatar);*/
+/*            if (success && vm.Image != null)
+                await _uploadService.DeleteFile(avatar);*/
         }
 
     }

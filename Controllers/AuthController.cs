@@ -1,6 +1,7 @@
 ﻿using CarRental_BE.Models.Auth;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace CarRental_BE.Controllers
@@ -25,14 +26,14 @@ namespace CarRental_BE.Controllers
             {
                 return Unauthorized("Invalid email or password");
             }
-
-            // Include user's role in the response data
             var responseData = new
             {
                 UserId = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Role = user.Role // Assuming user.Role is an enum value representing the user's role
+                Address = user.Address,
+                Phone = user.Phone,
+                Role = user.Role
             };
 
             // Return response with user data and role
