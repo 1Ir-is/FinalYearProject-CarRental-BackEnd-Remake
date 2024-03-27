@@ -13,7 +13,7 @@ namespace CarRental_BE.Repositories.User
         Task<Entities.User> GetById(long id);
         Task<List<Entities.User>> GetAll();
 
-
+        Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);
 
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CarRental_BE.Models.User
 {
-    public class ApprovalApplication
+    public class ApprovalApplicationVM
     {
         public string Name { get; set; }
         public string Phone { get; set; }

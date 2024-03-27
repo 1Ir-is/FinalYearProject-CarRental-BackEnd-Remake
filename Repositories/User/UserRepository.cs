@@ -1,4 +1,5 @@
 ﻿using CarRental_BE.Common.Enums;
+using CarRental_BE.Entities;
 using CarRental_BE.Interfaces;
 using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
@@ -117,6 +118,26 @@ namespace CarRental_BE.Repositories.User
                 httpContext.Session.SetString("Name", user.Name);
             }*/
             return true;
+        }
+
+        public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
+        {
+            var app = new ApprovalApplication
+            {
+                UserId = userId,
+                Address = vm.Address,
+                Description = vm.Description,
+                Email = vm.Email,
+                Identity = vm.Identity,
+                Name = vm.Name,
+                Title = vm.Title,
+                Phone = vm.Phone,
+                Type = vm.Type,
+                IsApprove = false,
+            };
+
+            await _context.ApprovalApplications.AddAsync(app);
+            await _context.SaveChangesAsync();
         }
 
     }

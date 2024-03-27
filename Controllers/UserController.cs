@@ -3,8 +3,10 @@ using CarRental_BE.Interfaces;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.DBContext;
 using CarRental_BE.Repositories.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CarRental_BE.Controllers
 {
@@ -40,6 +42,30 @@ namespace CarRental_BE.Controllers
             {
                 await _userRepository.EditInfoUser(vm);
                 return Ok("User information updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("create-approval-application")]
+        public async Task<IActionResult> CreateApprovalApplication([FromBody] ApprovalApplicationVM vm)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Get the user ID from the JWT token
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId");
+                if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
+                    return Unauthorized("User ID not found in token");
+
+                await _userRepository.CreateApprovalApplication(vm, userId);
+
+                return Ok("Approval application created successfully");
             }
             catch (Exception ex)
             {

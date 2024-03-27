@@ -53,6 +53,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+
 // Add scoped services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUploadService, UploadService>();
