@@ -18,9 +18,10 @@ namespace CarRental_BE.Repositories.User
 
         private static string key { get; set; } = "A!9HHhi%XjjYY4YP2@Nob009X";
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<Entities.User>> GetAll()
@@ -92,26 +93,30 @@ namespace CarRental_BE.Repositories.User
             return res;
         }
 
-        public async Task EditInfoUser(UserEditVM vm)
+        public async Task<bool> EditInfoUser(UserEditVM request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == vm.userId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.userId);
 
-/*            var avatar = user.Avatar;*/
-            user.Name = vm.Name;
-            user.Address = vm.Address;
-            user.Phone = vm.Phone;
-/*
-            if (vm.Image != null)
+            if (user == null)
             {
-                user.Avatar = await _uploadService.SaveFile(vm.Image);
-                await _uploadService.DeleteFile(avatar);
-            }*/
+                return false; // User not found
+            }
+
+            user.Name = request.Name;
+            user.Address = request.Address;
+            user.Phone = request.Phone;
+
             _context.Users.Update(user);
-            var success = await _context.SaveChangesAsync() > 0;
-            _httpContextAccessor.HttpContext.Session.SetString("Name", user.Name);
-/*            _httpContextAccessor.HttpContext.Session.SetString("Avatar", user.Avatar);*/
-/*            if (success && vm.Image != null)
-                await _uploadService.DeleteFile(avatar);*/
+            await _context.SaveChangesAsync();
+
+            // Access HttpContext through IHttpContextAccessor
+          /*  var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null)
+            {
+                // Access session or other HttpContext properties
+                httpContext.Session.SetString("Name", user.Name);
+            }*/
+            return true;
         }
 
     }
