@@ -49,23 +49,28 @@ namespace CarRental_BE.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost("create-approval-application")]
-        public async Task<IActionResult> CreateApprovalApplication([FromBody] ApprovalApplicationVM vm)
+        [HttpPost("create-approval-application/{userId}")] // Add userId as a parameter in the URL
+        public async Task<IActionResult> CreateApprovalApplication([FromBody] ApprovalApplicationVM vm, long userId)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                // Get the user ID from the JWT token
-                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId");
-                if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
-                    return Unauthorized("User ID not found in token");
-
+                // Call the repository method to create the approval application
                 await _userRepository.CreateApprovalApplication(vm, userId);
-
                 return Ok("Approval application created successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("check-approval/{userId}")]
+        public async Task<IActionResult> CheckApproval(long userId)
+        {
+            try
+            {
+                bool isApproving = await _userRepository.IsApproving(userId);
+                return Ok(new { IsApproving = isApproving });
             }
             catch (Exception ex)
             {

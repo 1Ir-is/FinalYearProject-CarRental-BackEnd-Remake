@@ -22,5 +22,9 @@ namespace CarRental_BE.Repositories.DBContext
 
         public DbSet<Entities.User> Users { get; set; }
         public DbSet<Entities.ApprovalApplication> ApprovalApplications { get; set; }
+        public DbSet<Entities.PostVehicle> PostVehicles { get; set; }
+        public DbSet<Entities.FollowVehicle> FollowVehicles { get; set; }
+        public DbSet<Entities.UserRentVehicle> UserRentVehicles { get; set; }
+        public DbSet<Entities.UserReviewVehicle> UserReviewVehicles { get; set; }
     }
 }

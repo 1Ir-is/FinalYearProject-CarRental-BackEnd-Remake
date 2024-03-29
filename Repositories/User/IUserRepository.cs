@@ -14,6 +14,6 @@ namespace CarRental_BE.Repositories.User
         Task<List<Entities.User>> GetAll();
 
         Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);
-
+        Task<bool> IsApproving(long userId);
     }
 }

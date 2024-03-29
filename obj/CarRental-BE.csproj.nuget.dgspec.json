@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {}
+    "F:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {}
   },
   "projects": {
-    "D:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {
+    "F:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
+        "projectUniqueName": "F:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
         "projectName": "CarRental-BE",
-        "projectPath": "D:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
+        "projectPath": "F:\\Final Year Project\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Final Year Project\\CarRental-BE\\CarRental-BE\\obj\\",
+        "outputPath": "F:\\Final Year Project\\CarRental-BE\\CarRental-BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -43,17 +43,22 @@ namespace CarRental_BE.Repositories.User
 
         public async Task<Entities.User> Login(LoginVM request)
         {
-            var u = await _context.Users.Include(x => x.ApprovalApplication).FirstOrDefaultAsync(x => x.Email == request.Email);
-            if (u == null)
+            var user = await _context.Users
+                .Include(x => x.ApprovalApplication)
+                .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+            if (user == null || !user.Status)
                 return null;
-            if (!u.Status)
-                return null;
-            if (u.Password == Encrypt(request.Password))
+
+            // Check if the password retrieved from the database is not null
+            if (user.Password != null && user.Password == Encrypt(request.Password))
             {
-                return u;
+                return user;
             }
+
             return null;
         }
+
 
         private static string Encrypt(string text)
         {
@@ -111,12 +116,12 @@ namespace CarRental_BE.Repositories.User
             await _context.SaveChangesAsync();
 
             // Access HttpContext through IHttpContextAccessor
-          /*  var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext != null)
-            {
-                // Access session or other HttpContext properties
-                httpContext.Session.SetString("Name", user.Name);
-            }*/
+            /*  var httpContext = _httpContextAccessor.HttpContext;
+              if (httpContext != null)
+              {
+                  // Access session or other HttpContext properties
+                  httpContext.Session.SetString("Name", user.Name);
+              }*/
             return true;
         }
 
@@ -140,6 +145,26 @@ namespace CarRental_BE.Repositories.User
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> IsApproving(long userId)
+        {
+            try
+            {
+                // Fetch the user's approval application
+                var approvalApplication = await _context.ApprovalApplications.FirstOrDefaultAsync(app => app.UserId == userId);
+
+                if (approvalApplication != null)
+                {
+                    return approvalApplication.IsApprove;
+                }
+
+                return false; // If no application found, assume not approving
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                return false; // Return false in case of an error
+            }
+        }
+
     }
 }
-
