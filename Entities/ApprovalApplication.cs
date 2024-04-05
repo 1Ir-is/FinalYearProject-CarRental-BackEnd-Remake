@@ -12,7 +12,7 @@ namespace CarRental_BE.Entities
         public string Title { get; set; }
         public string Description { get; set; }
         public long UserId { get; set; }
-        public bool IsApprove { get; set; } = false;
+        public REQUEST_STATUS RequestStatus { get; set; }
         public APPLICATION_TYPE Type { get; set; }
         public User User { get; set; }
     }

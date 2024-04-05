@@ -69,7 +69,7 @@ namespace CarRental_BE.Controllers
         {
             try
             {
-                bool isApproving = await _userRepository.IsApproving(userId);
+                string isApproving = await _userRepository.GetRequestStatus(userId);
                 return Ok(new { IsApproving = isApproving });
             }
             catch (Exception ex)

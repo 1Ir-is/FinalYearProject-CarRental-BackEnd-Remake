@@ -14,7 +14,7 @@ namespace CarRental_BE.Repositories.DBContext.Configuration
                 Address = "Hà Nội",
                 Email = "admin@admin.com",
                 Name = "Admin",
-                Password = "i2yBMU+FxDo=", // 123456
+                Password = "bLuioEpOf4gkryRaCzveGZuEnH8GZ6Na", // Kokuhaku@10052003
                 Phone = "0123456789",
                 Avatar = "/user-content/default-user.png",
                 Role = ROLE_TYPE.ADMIN,

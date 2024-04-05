@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Entities\FollowVehicle.cs~RF19a2c5b3.TMP" />
+    <None Remove="Repositories\User\IUserRepository.cs~RF3e01de24.TMP" />
   </ItemGroup>
 
   <ItemGroup>

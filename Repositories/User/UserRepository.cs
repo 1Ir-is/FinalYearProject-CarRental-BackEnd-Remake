@@ -138,14 +138,14 @@ namespace CarRental_BE.Repositories.User
                 Title = vm.Title,
                 Phone = vm.Phone,
                 Type = vm.Type,
-                IsApprove = false,
+                RequestStatus = REQUEST_STATUS.Pending
             };
 
             await _context.ApprovalApplications.AddAsync(app);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> IsApproving(long userId)
+        public async Task<string> GetRequestStatus(long userId)
         {
             try
             {
@@ -154,17 +154,19 @@ namespace CarRental_BE.Repositories.User
 
                 if (approvalApplication != null)
                 {
-                    return approvalApplication.IsApprove;
+                    return approvalApplication.RequestStatus.ToString(); // Return the request status
                 }
 
-                return false; // If no application found, assume not approving
+                return REQUEST_STATUS.NotApprovedYet.ToString(); // If no application found, return "NotApprovedYet"
             }
             catch (Exception ex)
             {
                 // Log or handle the exception
-                return false; // Return false in case of an error
+                return REQUEST_STATUS.NotApprovedYet.ToString(); // Return "NotApprovedYet" in case of an error
             }
         }
+
+
 
     }
 }

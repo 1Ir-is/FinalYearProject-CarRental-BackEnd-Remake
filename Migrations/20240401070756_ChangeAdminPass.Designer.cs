@@ -4,6 +4,7 @@ using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRental_BE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240401070756_ChangeAdminPass")]
+    partial class ChangeAdminPass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +48,9 @@ namespace CarRental_BE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsApprove")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -53,9 +58,6 @@ namespace CarRental_BE.Migrations
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestStatus")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -72,7 +74,7 @@ namespace CarRental_BE.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ApprovalApplications", (string)null);
+                    b.ToTable("ApprovalApplications");
                 });
 
             modelBuilder.Entity("CarRental_BE.Entities.FollowVehicle", b =>
@@ -99,7 +101,7 @@ namespace CarRental_BE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FollowVehicles", (string)null);
+                    b.ToTable("FollowVehicles");
                 });
 
             modelBuilder.Entity("CarRental_BE.Entities.PostVehicle", b =>
@@ -168,7 +170,7 @@ namespace CarRental_BE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostVehicles", (string)null);
+                    b.ToTable("PostVehicles");
                 });
 
             modelBuilder.Entity("CarRental_BE.Entities.User", b =>
@@ -212,7 +214,7 @@ namespace CarRental_BE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
@@ -279,7 +281,7 @@ namespace CarRental_BE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRentVehicles", (string)null);
+                    b.ToTable("UserRentVehicles");
                 });
 
             modelBuilder.Entity("CarRental_BE.Entities.UserReviewVehicle", b =>
@@ -316,7 +318,7 @@ namespace CarRental_BE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReviewVehicles", (string)null);
+                    b.ToTable("UserReviewVehicles");
                 });
 
             modelBuilder.Entity("CarRental_BE.Entities.ApprovalApplication", b =>
