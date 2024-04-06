@@ -1,3 +1,4 @@
+
 using CarRental_BE.Interfaces;
 using CarRental_BE.Repositories.DBContext;
 using CarRental_BE.Repositories.User;
@@ -57,7 +58,7 @@ builder.Services.AddAuthentication(options =>
 
 // Add scoped services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUploadService, UploadService>();
+builder.Services.AddScoped<IUploadService,UploadService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Build the app

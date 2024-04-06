@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace CarRental_BE.Services
@@ -21,31 +22,37 @@ namespace CarRental_BE.Services
             }
         }
 
-        public async Task<string> SaveFile(IFormFile file)
-        {
-            string originalFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            string filePath = Path.Combine(_userContent, originalFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return originalFileName;
-        }
-
-        public async Task DeleteFile(string fileName)
-        {
-            string filePath = Path.Combine(_userContent, fileName);
-            if (File.Exists(filePath))
-            {
-                await Task.Run(() => File.Delete(filePath));
-            }
-        }
-
         public string GetFullPath(string filename)
         {
-            return Path.Combine(_userContent, filename);
+            var path = Path.Combine(USER_CONTENT_FOLDER, filename);
+            return path;
+        }
+
+        public async Task DeleteFile(string filename)
+        {
+            string path = Path.Combine(_userContent, filename);
+            if (File.Exists(path))
+            {
+                await Task.Run(() => File.Delete(path));
+            }
+        }
+
+        private async Task<string> ConfirmSave(Stream stream, string fileName)
+        {
+            string filePath = Path.Combine(_userContent, fileName);
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                await stream.CopyToAsync(fs);
+            }
+            return Path.Combine(USER_CONTENT_FOLDER, fileName);
+        }
+
+        public async Task<string> SaveFile(IFormFile file)
+        {
+            string originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+
+            return await ConfirmSave(file.OpenReadStream(), fileName);
         }
     }
 }
