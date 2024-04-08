@@ -80,16 +80,22 @@ namespace CarRental_BE.Repositories.PostVehicle
 
             return postVehicle;
         }
-
- /*       public async Task UpdatePostVehicle(PostVehicleVM ev)
+        public async Task UpdatePostVehicle(PostVehicleVM ev)
         {
+            // Find the post vehicle entity by its ID
             var postVehicle = await _context.PostVehicles.FindAsync(ev.Id);
 
+            // If the post vehicle with the given ID is not found, throw an exception
+            if (postVehicle == null)
+            {
+                throw new ArgumentException($"Post vehicle with ID {ev.Id} not found.");
+            }
+
+            // Update the properties of the post vehicle entity with the values from the view model
             postVehicle.Category = ev.Category;
             postVehicle.Description = ev.Description;
             postVehicle.Address = ev.Address;
             postVehicle.Price = ev.Price;
-            postVehicle.Rating = 0;
             postVehicle.VehicleYear = ev.VehicleYear;
             postVehicle.VehicleType = ev.VehicleType;
             postVehicle.VehicleSeat = ev.VehicleSeat;
@@ -98,16 +104,31 @@ namespace CarRental_BE.Repositories.PostVehicle
             postVehicle.Title = ev.Title;
             postVehicle.PlaceId = ev.PlaceId;
 
-        *//*    var img = postVehicle.Image;
-            if (ev.Image != null)
-                postVehicle.Image = await _uploadService.SaveFile(ev.Image);*//*
+            // Ensure that the required properties are not null or empty
+            if (string.IsNullOrEmpty(postVehicle.Category) || string.IsNullOrEmpty(postVehicle.Description)
+                || string.IsNullOrEmpty(postVehicle.Address) || string.IsNullOrEmpty(postVehicle.VehicleType)
+                || string.IsNullOrEmpty(postVehicle.VehicleName) || string.IsNullOrEmpty(postVehicle.VehicleFuel)
+                || string.IsNullOrEmpty(postVehicle.Title) || string.IsNullOrEmpty(postVehicle.PlaceId))
+            {
+                throw new ArgumentException("One or more required properties are null or empty.");
+            }
 
-            _context.PostVehicles.Update(postVehicle);
-            await _context.SaveChangesAsync();
+            // Update other properties as needed
 
-         *//*   if (ev.Image != null)
-                await _uploadService.DeleteFile(img);*//*
-        }*/
+            try
+            {
+                // Update the post vehicle entity in the database
+                _context.PostVehicles.Update(postVehicle);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during the update process
+                throw new Exception($"Error updating post vehicle: {ex.Message}");
+            }
+        }
+
+
 
         public async Task Toggle(long id)
         {

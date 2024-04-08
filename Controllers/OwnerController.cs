@@ -33,5 +33,25 @@ namespace CarRental_BE.Controllers
             }
         }
 
+        [HttpPut("update-post")]
+        public async Task<IActionResult> UpdatePostVehicle(PostVehicleVM ev)
+        {
+            try
+            {
+                await _postVehicleRepository.UpdatePostVehicle(ev);
+                return Ok("Post vehicle updated successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error updating post vehicle: {ex.Message}");
+            }
+        }
+
+
+
     }
 }
