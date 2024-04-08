@@ -1,6 +1,7 @@
 
 using CarRental_BE.Interfaces;
 using CarRental_BE.Repositories.DBContext;
+using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.User;
 using CarRental_BE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddDistributedMemoryCache();
 
 // Add HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
@@ -60,6 +69,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUploadService,UploadService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPostVehicleRepository, PostVehicleRepository>();
 
 // Build the app
 var app = builder.Build();
@@ -81,6 +91,7 @@ app.UseCors(x => x
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 // Create user-content directory if it doesn't exist
 string userContentDirectory = Path.Combine(app.Environment.ContentRootPath, "user-content");

@@ -142,3 +142,8 @@ F:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\refint\CarRenta
 F:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.pdb
 F:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.genruntimeconfig.cache
 F:\Final Year Project\CarRental-BE\CarRental-BE\obj\Debug\net6.0\ref\CarRental-BE.dll
+F:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+F:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
+F:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\StackExchange.Redis.dll
+F:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\System.Diagnostics.PerformanceCounter.dll
+F:\Final Year Project\CarRental-BE\CarRental-BE\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll

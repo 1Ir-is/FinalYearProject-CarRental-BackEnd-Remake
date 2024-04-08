@@ -9,6 +9,10 @@
 
   <ItemGroup>
     <None Remove="Entities\FollowVehicle.cs~RF19a2c5b3.TMP" />
+    <None Remove="Entities\zyytd4ra.hvg~" />
+    <None Remove="Models\PostVehicle\PostVehicleVM.cs~RF4c5acbac.TMP" />
+    <None Remove="Models\User\UserEditVM.cs~RF780eec.TMP" />
+    <None Remove="Repositories\PostVehicle\PostVehicleRepository.cs~RF4c138fc6.TMP" />
     <None Remove="Repositories\User\IUserRepository.cs~RF3e01de24.TMP" />
   </ItemGroup>
 
@@ -16,6 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +30,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

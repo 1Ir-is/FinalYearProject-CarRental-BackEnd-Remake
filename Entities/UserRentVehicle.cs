@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using CarRental_BE.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarRental_BE.Entities
 {

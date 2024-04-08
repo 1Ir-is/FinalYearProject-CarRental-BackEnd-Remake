@@ -1,4 +1,5 @@
-﻿using CarRental_BE.Common.Enums;
+﻿
+using CarRental_BE.Common.Enums;
 
 namespace CarRental_BE.Entities
 {
@@ -14,5 +15,10 @@ namespace CarRental_BE.Entities
         public double TrustPoint { get; set; } = 0;
         public ROLE_TYPE Role { get; set; }
         public ApprovalApplication ApprovalApplication { get; set; }
+
+        public ICollection<PostVehicle> PostVehicles { get; set; }
+        public ICollection<UserRentVehicle> UserRentVehicles { get; set; }
+        public ICollection<FollowVehicle> FollowVehicles { get; set; }
+        public ICollection<UserReviewVehicle> UserReviewVehicles { get; set; }
     }
 }
