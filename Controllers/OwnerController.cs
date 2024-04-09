@@ -34,6 +34,7 @@ namespace CarRental_BE.Controllers
         }
 
 
+
         [HttpPut("update-post/{postId}")]
         public async Task<IActionResult> UpdatePostVehicle(long postId, [FromBody] UpdateVehicleVM modal)
         {
@@ -47,7 +48,5 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating post vehicle: {ex.Message}");
             }
         }
-
-
     }
 }
