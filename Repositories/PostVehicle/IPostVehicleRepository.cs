@@ -14,7 +14,7 @@ namespace CarRental_BE.Repositories.PostVehicle
         Task Toggle(long id);
         Task AddPostVehicle(PostVehicleVM ev, long userId);
 
-/*        Task UpdatePostVehicle(PostVehicleVM pv);*/
+        Task UpdatePostVehicle(long id, UpdateVehicleVM ev);
 
         Task DeletePostVehicle(long id);
     }

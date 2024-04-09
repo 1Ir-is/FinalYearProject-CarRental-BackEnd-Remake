@@ -3,6 +3,7 @@ using CarRental_BE.Models.PostVehicle;
 using CarRental_BE.Services;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental_BE.Repositories.PostVehicle
 {
@@ -80,34 +81,43 @@ namespace CarRental_BE.Repositories.PostVehicle
 
             return postVehicle;
         }
-
- /*       public async Task UpdatePostVehicle(PostVehicleVM ev)
+        public async Task UpdatePostVehicle(long postId, UpdateVehicleVM postVehicleVM)
         {
-            var postVehicle = await _context.PostVehicles.FindAsync(ev.Id);
+            try
+            {
+                var existingPostVehicle = await _context.PostVehicles.FirstOrDefaultAsync(x => x.Id == postId);
 
-            postVehicle.Category = ev.Category;
-            postVehicle.Description = ev.Description;
-            postVehicle.Address = ev.Address;
-            postVehicle.Price = ev.Price;
-            postVehicle.Rating = 0;
-            postVehicle.VehicleYear = ev.VehicleYear;
-            postVehicle.VehicleType = ev.VehicleType;
-            postVehicle.VehicleSeat = ev.VehicleSeat;
-            postVehicle.VehicleName = ev.VehicleName;
-            postVehicle.VehicleFuel = ev.VehicleFuel;
-            postVehicle.Title = ev.Title;
-            postVehicle.PlaceId = ev.PlaceId;
+                if (existingPostVehicle == null)
+                {
+                    throw new Exception("Post vehicle not found");
+                }
 
-        *//*    var img = postVehicle.Image;
-            if (ev.Image != null)
-                postVehicle.Image = await _uploadService.SaveFile(ev.Image);*//*
+                // Merge changes from postVehicleVM into existingPostVehicle
+                existingPostVehicle.VehicleName = postVehicleVM.VehicleName ?? existingPostVehicle.VehicleName;
+                existingPostVehicle.VehicleFuel = postVehicleVM.VehicleFuel ?? existingPostVehicle.VehicleFuel;
+                existingPostVehicle.VehicleType = postVehicleVM.VehicleType ?? existingPostVehicle.VehicleType;
+                existingPostVehicle.Description = postVehicleVM.Description ?? existingPostVehicle.Description;
+                existingPostVehicle.Title = postVehicleVM.Title ?? existingPostVehicle.Title;
+                existingPostVehicle.Category = postVehicleVM.Category ?? existingPostVehicle.Category;
+                existingPostVehicle.Address = postVehicleVM.Address ?? existingPostVehicle.Address;
+                existingPostVehicle.PlaceId = postVehicleVM.PlaceId ?? existingPostVehicle.PlaceId;
 
-            _context.PostVehicles.Update(postVehicle);
-            await _context.SaveChangesAsync();
+                // Handle nullable types
+                existingPostVehicle.VehicleYear = postVehicleVM.VehicleYear != 0 ? postVehicleVM.VehicleYear : existingPostVehicle.VehicleYear;
+                existingPostVehicle.VehicleSeat = postVehicleVM.VehicleSeat != 0 ? postVehicleVM.VehicleSeat : existingPostVehicle.VehicleSeat;
+                existingPostVehicle.Price = postVehicleVM.Price != 0 ? postVehicleVM.Price : existingPostVehicle.Price;
 
-         *//*   if (ev.Image != null)
-                await _uploadService.DeleteFile(img);*//*
-        }*/
+                // Update the entity in the database
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating post vehicle: {ex.Message}");
+            }
+        }
+
+
+
 
         public async Task Toggle(long id)
         {
