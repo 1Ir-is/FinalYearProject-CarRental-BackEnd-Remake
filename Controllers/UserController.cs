@@ -38,25 +38,6 @@ namespace CarRental_BE.Controllers
             }
         }
 
-        [HttpGet("get-post-vehicles-by-user/{userId}")]
-        public async Task<IActionResult> GetPostVehiclesByUser(long userId)
-        {
-            try
-            {
-                var postVehicles = await _postVehicleRepository.GetPostVehiclesByUser(userId);
-
-                if (postVehicles == null || !postVehicles.Any())
-                    return NotFound("No post vehicles found for the specified user");
-
-                return Ok(postVehicles);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving post vehicles: {ex.Message}");
-            }
-        }
-
-
         [HttpPost("edit-info")]
         public async Task<IActionResult> EditUserInfo([FromBody] UserEditVM vm)
         {
