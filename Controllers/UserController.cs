@@ -2,6 +2,7 @@
 using CarRental_BE.Interfaces;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.DBContext;
+using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace CarRental_BE.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPostVehicleRepository _postVehicleRepository;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IPostVehicleRepository postVehicleRepository)
         {
             _userRepository = userRepository;
+            _postVehicleRepository = postVehicleRepository;
         }
 
         [HttpGet]
@@ -34,6 +37,25 @@ namespace CarRental_BE.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("get-post-vehicles-by-user/{userId}")]
+        public async Task<IActionResult> GetPostVehiclesByUser(long userId)
+        {
+            try
+            {
+                var postVehicles = await _postVehicleRepository.GetPostVehiclesByUser(userId);
+
+                if (postVehicles == null || !postVehicles.Any())
+                    return NotFound("No post vehicles found for the specified user");
+
+                return Ok(postVehicles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving post vehicles: {ex.Message}");
+            }
+        }
+
 
         [HttpPost("edit-info")]
         public async Task<IActionResult> EditUserInfo([FromBody] UserEditVM vm)
