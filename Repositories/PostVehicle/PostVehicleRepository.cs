@@ -117,9 +117,6 @@ namespace CarRental_BE.Repositories.PostVehicle
         }
 
 
-
-
-
         public async Task Toggle(long id)
         {
             var postVehicle = await _context.PostVehicles.FindAsync(id);

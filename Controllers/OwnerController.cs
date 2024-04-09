@@ -33,8 +33,6 @@ namespace CarRental_BE.Controllers
             }
         }
 
-
-
         [HttpPut("update-post/{postId}")]
         public async Task<IActionResult> UpdatePostVehicle(long postId, [FromBody] UpdateVehicleVM modal)
         {
@@ -46,6 +44,20 @@ namespace CarRental_BE.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating post vehicle: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("delete-post/{postId}")]
+        public async Task<IActionResult> DeletePostVehicle(long postId)
+        {
+            try
+            {
+                await _postVehicleRepository.DeletePostVehicle(postId);
+                return Ok("Post vehicle deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting post vehicle: {ex.Message}");
             }
         }
     }
