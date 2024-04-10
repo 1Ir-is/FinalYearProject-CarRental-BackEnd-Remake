@@ -120,6 +120,24 @@ namespace CarRental_BE.Repositories.User
             return true;
         }
 
+        public async Task<bool> ChangePasswordUser(ChangePasswordVM vm)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == vm.Id);
+
+            if (user.Password != Encrypt(vm.OldPassword))
+            {
+                return false;
+            }
+
+            user.Password = Encrypt(vm.NewPassword);
+
+            _context.Users.Update(user);
+
+            var success = await _context.SaveChangesAsync() > 0;
+
+            return success;
+        }
+
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
         {
             var app = new ApprovalApplication

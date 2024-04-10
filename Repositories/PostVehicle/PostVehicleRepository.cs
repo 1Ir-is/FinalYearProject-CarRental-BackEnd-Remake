@@ -107,6 +107,12 @@ namespace CarRental_BE.Repositories.PostVehicle
                 existingPostVehicle.VehicleSeat = postVehicleVM.VehicleSeat != 0 ? postVehicleVM.VehicleSeat : existingPostVehicle.VehicleSeat;
                 existingPostVehicle.Price = postVehicleVM.Price != 0 ? postVehicleVM.Price : existingPostVehicle.Price;
 
+                // If the Image property is not null or empty, update the image
+                if (!string.IsNullOrEmpty(postVehicleVM.Image))
+                {
+                    existingPostVehicle.Image = postVehicleVM.Image;
+                }
+
                 // Update the entity in the database
                 await _context.SaveChangesAsync();
             }

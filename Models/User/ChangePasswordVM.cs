@@ -11,6 +11,6 @@ namespace CarRental_BE.Models.User
         public string OldPassword { get; set; }
 
         [Required]
-        public string NewPassword { get; }
+        public string NewPassword { get; set;}
     }
 }

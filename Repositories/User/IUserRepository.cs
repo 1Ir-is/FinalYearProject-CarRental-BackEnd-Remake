@@ -12,7 +12,7 @@ namespace CarRental_BE.Repositories.User
 
         Task<Entities.User> GetById(long id);
         Task<List<Entities.User>> GetAll();
-
+        Task<bool> ChangePasswordUser(ChangePasswordVM vm);
         Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);
         Task<string> GetRequestStatus(long userId);
         Task<string> GetUserAvatar(long userId);

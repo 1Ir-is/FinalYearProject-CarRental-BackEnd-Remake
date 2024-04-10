@@ -1,4 +1,5 @@
 ﻿using CarRental_BE.Models.Auth;
+using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -52,6 +53,19 @@ namespace CarRental_BE.Controllers
             }
 
             return Ok("Registration successful!");
+        }
+
+        [HttpPost("change-password")] // Add a new endpoint for changing password
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
+        {
+            var success = await _userRepository.ChangePasswordUser(model);
+
+            if (!success)
+            {
+                return BadRequest("Failed to change password. Please check your credentials.");
+            }
+
+            return Ok("Password changed successfully!");
         }
     }
 }
