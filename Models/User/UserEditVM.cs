@@ -16,7 +16,7 @@ namespace CarRental_BE.Models.User
 
         [Required]
         public string Address { get; set; }
-
+        public string Avatar { get; set; }
 
     }
 }

@@ -24,7 +24,7 @@ namespace CarRental_BE.Repositories.PostVehicle
         {
             var postVehicle = new Entities.PostVehicle()
             {
-                /*  Image = ev.Image != null ? await _uploadService.SaveFile(ev.Image) : "",*/
+                Image = ev.Image,
                 Category = ev.Category,
                 UserId = userId,
                 Description = ev.Description,

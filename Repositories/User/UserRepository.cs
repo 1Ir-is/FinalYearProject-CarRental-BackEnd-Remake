@@ -111,17 +111,12 @@ namespace CarRental_BE.Repositories.User
             user.Name = request.Name;
             user.Address = request.Address;
             user.Phone = request.Phone;
+            user.Avatar = request.Avatar;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 
-            // Access HttpContext through IHttpContextAccessor
-            /*  var httpContext = _httpContextAccessor.HttpContext;
-              if (httpContext != null)
-              {
-                  // Access session or other HttpContext properties
-                  httpContext.Session.SetString("Name", user.Name);
-              }*/
+           
             return true;
         }
 
@@ -166,6 +161,23 @@ namespace CarRental_BE.Repositories.User
             }
         }
 
+        public async Task<string> GetUserAvatar(long userId)
+        {
+            try
+            {
+                // Retrieve the user by their ID
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+                // If the user is found, return their avatar URL
+                return user != null ? user.Avatar : null;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions and return null in case of an error
+                Console.WriteLine($"Error retrieving user avatar: {ex.Message}");
+                return null;
+            }
+        }
 
 
     }

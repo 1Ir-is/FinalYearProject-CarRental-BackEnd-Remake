@@ -81,5 +81,42 @@ namespace CarRental_BE.Controllers
             }
         }
 
+        [HttpGet("avatar/{userId}")]
+        public async Task<IActionResult> GetUserAvatar(long userId)
+        {
+            try
+            {
+                // Call the repository method to fetch the avatar URL
+                var userAvatar = await _userRepository.GetUserAvatar(userId);
+
+                // Return the avatar URL in the response
+                return Ok(new { Avatar = userAvatar });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(long id)
+        {
+            try
+            {
+                // Call the repository method to fetch the user by ID
+                var user = await _userRepository.GetById(id);
+
+                if (user == null)
+                    return NotFound();
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
     }
 }
