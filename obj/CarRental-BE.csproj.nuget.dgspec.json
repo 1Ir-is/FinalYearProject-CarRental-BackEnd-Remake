@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {}
+    "D:\\Final Year Project\\FinalYearProject-CarRental-BackEnd-Remake\\CarRental-BE.csproj": {}
   },
   "projects": {
-    "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {
+    "D:\\Final Year Project\\FinalYearProject-CarRental-BackEnd-Remake\\CarRental-BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
+        "projectUniqueName": "D:\\Final Year Project\\FinalYearProject-CarRental-BackEnd-Remake\\CarRental-BE.csproj",
         "projectName": "CarRental-BE",
-        "projectPath": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\obj\\",
+        "projectPath": "D:\\Final Year Project\\FinalYearProject-CarRental-BackEnd-Remake\\CarRental-BE.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Final Year Project\\FinalYearProject-CarRental-BackEnd-Remake\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +38,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -113,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
