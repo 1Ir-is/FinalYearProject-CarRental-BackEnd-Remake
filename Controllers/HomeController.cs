@@ -46,5 +46,19 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving post vehicle: {ex.Message}");
             }
         }
+
+        [HttpGet("find-post-vehicles")]
+        public async Task<IActionResult> FindPostVehicles([FromQuery] string search)
+        {
+            try
+            {
+                var postVehicles = await _postVehicleRepository.FindPostVehicles(search);
+                return Ok(postVehicles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error searching post vehicles: {ex.Message}");
+            }
+        }
     }
 }

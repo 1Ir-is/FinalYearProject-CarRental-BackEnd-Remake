@@ -7,7 +7,7 @@ using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-
+using BCrypt.Net;
 
 namespace CarRental_BE.Repositories.User
 {
@@ -51,7 +51,7 @@ namespace CarRental_BE.Repositories.User
                 return null;
 
             // Check if the password retrieved from the database is not null
-            if (user.Password != null && user.Password == Encrypt(request.Password))
+            if (user.Password != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return user;
             }
@@ -60,20 +60,26 @@ namespace CarRental_BE.Repositories.User
         }
 
 
-        private static string Encrypt(string text)
-        {
-            using var md5 = new MD5CryptoServiceProvider();
-            using var tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            using (var transform = tdes.CreateEncryptor())
+        /*    private static string Encrypt(string text)
             {
-                byte[] textBytes = UTF8Encoding.UTF8.GetBytes(text);
-                byte[] bytes = transform.TransformFinalBlock(textBytes, 0, textBytes.Length);
-                return Convert.ToBase64String(bytes, 0, bytes.Length);
-            }
+                using var md5 = new MD5CryptoServiceProvider();
+                using var tdes = new TripleDESCryptoServiceProvider();
+                tdes.Key = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                tdes.Mode = CipherMode.ECB;
+                tdes.Padding = PaddingMode.PKCS7;
+
+                using (var transform = tdes.CreateEncryptor())
+                {
+                    byte[] textBytes = UTF8Encoding.UTF8.GetBytes(text);
+                    byte[] bytes = transform.TransformFinalBlock(textBytes, 0, textBytes.Length);
+                    return Convert.ToBase64String(bytes, 0, bytes.Length);
+                }
+            }*/
+
+
+        private static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
         public async Task<bool> Register(RegisterVM request)
@@ -86,7 +92,7 @@ namespace CarRental_BE.Repositories.User
             {
                 Email = request.Email,
                 Name = request.Name,
-                Password = Encrypt(request.Password),
+                Password = HashPassword(request.Password),
                 Role = ROLE_TYPE.USER,
                 Avatar = "/user-content/default-user.png",
                 // You can set Address to null or empty string here if needed
@@ -98,6 +104,7 @@ namespace CarRental_BE.Repositories.User
 
             return res;
         }
+
 
         public async Task<bool> EditInfoUser(UserEditVM request)
         {
@@ -124,12 +131,19 @@ namespace CarRental_BE.Repositories.User
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == vm.Id);
 
-            if (user.Password != Encrypt(vm.OldPassword))
+            if (user == null)
             {
-                return false;
+                return false; // User not found
             }
 
-            user.Password = Encrypt(vm.NewPassword);
+            // Verify the old password using bcrypt
+            if (!BCrypt.Net.BCrypt.Verify(vm.OldPassword, user.Password))
+            {
+                return false; // Old password doesn't match
+            }
+
+            // Hash the new password using bcrypt
+            user.Password = HashPassword(vm.NewPassword);
 
             _context.Users.Update(user);
 
@@ -137,6 +151,7 @@ namespace CarRental_BE.Repositories.User
 
             return success;
         }
+
 
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
         {
