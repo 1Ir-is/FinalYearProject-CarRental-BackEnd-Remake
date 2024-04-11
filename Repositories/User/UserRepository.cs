@@ -29,16 +29,28 @@ namespace CarRental_BE.Repositories.User
         {
             var users = await _context.Users.Include(x => x.ApprovalApplication).ToListAsync();
 
+
             return users;
         }
+
 
         public async Task<Entities.User> GetById(long id)
         {
             var user = await _context.Users
-                .Where(x => x.Id == id).FirstOrDefaultAsync(); // Convert Id to string
+                .Where(x => x.Id == id)
+                .Include(x => x.PostVehicles)
+                .Include(x => x.FollowVehicles)
+                    .ThenInclude(x => x.PostVehicle)
+                .Include(x => x.UserRentVehicles)
+                    .ThenInclude(x => x.PostVehicle)
+                .Include(x => x.UserReviewVehicles)
+                    .ThenInclude(x => x.PostVehicle)
+                .Include(x => x.ApprovalApplication)
+                .FirstOrDefaultAsync();
 
             return user;
         }
+
 
 
         public async Task<Entities.User> Login(LoginVM request)
@@ -58,24 +70,6 @@ namespace CarRental_BE.Repositories.User
 
             return null;
         }
-
-
-        /*    private static string Encrypt(string text)
-            {
-                using var md5 = new MD5CryptoServiceProvider();
-                using var tdes = new TripleDESCryptoServiceProvider();
-                tdes.Key = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                tdes.Mode = CipherMode.ECB;
-                tdes.Padding = PaddingMode.PKCS7;
-
-                using (var transform = tdes.CreateEncryptor())
-                {
-                    byte[] textBytes = UTF8Encoding.UTF8.GetBytes(text);
-                    byte[] bytes = transform.TransformFinalBlock(textBytes, 0, textBytes.Length);
-                    return Convert.ToBase64String(bytes, 0, bytes.Length);
-                }
-            }*/
-
 
         private static string HashPassword(string password)
         {
