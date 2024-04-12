@@ -1,4 +1,5 @@
-﻿using CarRental_BE.Models.Auth;
+﻿using CarRental_BE.Entities;
+using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,30 @@ namespace CarRental_BE.Controllers
             return Ok(responseData);
         }
 
+        [HttpPost("login-with-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromQuery] string googleEmail)
+        {
+            var user = await _userRepository.LoginWithGoogleEmail(googleEmail);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid email or password");
+            }
+            var responseData = new
+            {
+                UserId = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.Phone,
+                Role = user.Role
+            };
+
+            // Return response with user data and role
+            return Ok(responseData);
+        }
+
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterVM model)
@@ -78,7 +103,18 @@ namespace CarRental_BE.Controllers
                 return BadRequest("Failed to login with Google");
             }
 
-            return Ok(user);
+            var responseData = new
+            {
+                UserId = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.Phone,
+                Role = user.Role
+            };
+
+            return Ok(responseData);
         }
+
     }
 }

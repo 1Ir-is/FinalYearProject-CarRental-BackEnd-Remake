@@ -77,6 +77,21 @@ namespace CarRental_BE.Repositories.User
             return null;
         }
 
+        public async Task<Entities.User> LoginWithGoogleEmail(string googleEmail)
+        {
+            var user = await _context.Users
+                .Include(x => x.ApprovalApplication)
+                .FirstOrDefaultAsync(x => x.Email == googleEmail);
+
+            if (user == null || !user.Status)
+            {
+                return null;
+            }
+
+
+            return user;
+        }
+
         private static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
@@ -258,8 +273,8 @@ namespace CarRental_BE.Repositories.User
 
  */
 
-        public async Task<string> LoginWithGoogle(string token)
-        {
+        public async Task<Entities.User> LoginWithGoogle(string token)
+{
             try
             {
                 // Verify the Google token
@@ -283,7 +298,7 @@ namespace CarRental_BE.Repositories.User
                     _context.Users.Update(existingUser);
                     await _context.SaveChangesAsync();
 
-                    return existingUser.Id.ToString(); // Return user ID or token if applicable
+                    return existingUser; // Return the existing user
                 }
 
                 // Create a new user entry in the database
@@ -299,7 +314,9 @@ namespace CarRental_BE.Repositories.User
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                return newUser.Id.ToString(); // Return user ID or token if applicable
+                return newUser; // Return the newly registered user
+
+
             }
             catch (Exception ex)
             {
@@ -308,6 +325,7 @@ namespace CarRental_BE.Repositories.User
                 return null;
             }
         }
+
 
     }
 }

@@ -8,6 +8,7 @@ namespace CarRental_BE.Repositories.User
         Task<bool> Register(RegisterVM request);
 
         Task<Entities.User> Login(LoginVM request);
+        Task<Entities.User> LoginWithGoogleEmail(string googleEmail);
         Task<bool> EditInfoUser(UserEditVM request);
 
         Task<Entities.User> GetById(long id);
@@ -16,6 +17,6 @@ namespace CarRental_BE.Repositories.User
         Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);
         Task<string> GetRequestStatus(long userId);
         Task<string> GetUserAvatar(long userId);
-        Task<string> LoginWithGoogle(string token);
+        Task<Entities.User> LoginWithGoogle(string token);
     }
 }
