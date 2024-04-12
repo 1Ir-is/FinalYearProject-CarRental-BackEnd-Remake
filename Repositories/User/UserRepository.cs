@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 using BCrypt.Net;
+using System.Net.Http;
+using Microsoft.Data.SqlClient.Server;
+using Google.Apis.Auth;
 
 namespace CarRental_BE.Repositories.User
 {
@@ -16,13 +19,16 @@ namespace CarRental_BE.Repositories.User
         private readonly AppDbContext _context;
         private readonly IUploadService _uploadService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpClient _httpClient;
 
         private static string key { get; set; } = "A!9HHhi%XjjYY4YP2@Nob009X";
 
-        public UserRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        public UserRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor,
+            HttpClient httpClient)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _httpClient = httpClient;
         }
 
         public async Task<List<Entities.User>> GetAll()
@@ -206,6 +212,102 @@ namespace CarRental_BE.Repositories.User
             }
         }
 
+
+        /* public async Task<bool> RegisterWithGoogle(string name, string email)
+         {
+             try
+             {
+                 // Check if the user already exists in the database
+                 var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                 if (existingUser != null)
+                 {
+                     // User already exists, update information
+                     existingUser.Name = name;
+                     // You can update other properties here if needed
+
+                     _context.Users.Update(existingUser);
+                     var result = await _context.SaveChangesAsync();
+
+                     // Check if the user information was successfully updated
+                     return result > 0;
+                 }
+
+                 // Create a new user entry in the database
+                 var newUser = new Entities.User
+                 {
+                     Name = name,
+                     Email = email,
+                     Role = ROLE_TYPE.USER,
+                     Avatar = "/user-content/default-user.png"
+                     // You can set additional properties here if needed
+                 };
+
+                 _context.Users.Add(newUser);
+                 var result = await _context.SaveChangesAsync();
+
+                 // Check if the user was successfully added to the database
+                 return result > 0;
+             }
+             catch (Exception ex)
+             {
+                 // Log the exception
+                 Console.WriteLine($"Error registering user with Google: {ex.Message}");
+                 return false;
+             }
+         }
+
+ */
+
+        public async Task<string> LoginWithGoogle(string token)
+        {
+            try
+            {
+                // Verify the Google token
+                var payload = await GoogleJsonWebSignature.ValidateAsync(token);
+
+                // Extract user information from the verified token
+                var email = payload.Email;
+                var name = payload.Name;
+                var avatar = payload.Picture;
+
+                // Check if the user already exists in the database
+                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+                if (existingUser != null)
+                {
+                    // User already exists, update information
+                    existingUser.Name = name;
+                    existingUser.Avatar = avatar;
+                    // You can update other properties here if needed
+
+                    _context.Users.Update(existingUser);
+                    await _context.SaveChangesAsync();
+
+                    return existingUser.Id.ToString(); // Return user ID or token if applicable
+                }
+
+                // Create a new user entry in the database
+                var newUser = new Entities.User
+                {
+                    Name = name,
+                    Email = email,
+                    Role = ROLE_TYPE.USER,
+                    Avatar = avatar ?? "/user-content/default-user.png"
+                    // You can set additional properties here if needed
+                };
+
+                _context.Users.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                return newUser.Id.ToString(); // Return user ID or token if applicable
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error logging in with Google: {ex.Message}");
+                return null;
+            }
+        }
 
     }
 }

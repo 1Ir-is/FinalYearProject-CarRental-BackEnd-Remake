@@ -67,5 +67,18 @@ namespace CarRental_BE.Controllers
 
             return Ok("Password changed successfully!");
         }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin(GoogleLoginRequest request)
+        {
+            var user = await _userRepository.LoginWithGoogle(request.Token);
+
+            if (user == null)
+            {
+                return BadRequest("Failed to login with Google");
+            }
+
+            return Ok(user);
+        }
     }
 }

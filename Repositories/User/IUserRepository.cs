@@ -16,5 +16,6 @@ namespace CarRental_BE.Repositories.User
         Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);
         Task<string> GetRequestStatus(long userId);
         Task<string> GetUserAvatar(long userId);
+        Task<string> LoginWithGoogle(string token);
     }
 }
