@@ -14,11 +14,21 @@ namespace CarRental_BE.Repositories.FollowVehicle
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task FollowVehicle(long postVehicleId)
+        public async Task<IEnumerable<Entities.FollowVehicle>> GetAllFollowVehicles(long userId)
         {
-            var res = long.TryParse(_httpContextAccessor.HttpContext.Session.GetString("UserId"), out long userId);
-            if (!res)
-                return;
+
+            var followVehicles = await _context.FollowVehicles
+                .Where(x => x.UserId == userId)
+                .Include(x => x.PostVehicle)
+                .Include(x => x.User)
+                .ToListAsync();
+
+            return followVehicles;
+        }
+
+        public async Task FollowVehicle(long postVehicleId, long userId)
+        {
+            
             var followVehicle = new Entities.FollowVehicle
             {
                 PostVehicleId = postVehicleId,
@@ -30,19 +40,15 @@ namespace CarRental_BE.Repositories.FollowVehicle
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Entities.FollowVehicle>> GetAllFollowVehicles()
+
+        public async Task UnfollowVehicle(long postVehicleId, long userId)
         {
-            var res = long.TryParse(_httpContextAccessor.HttpContext.Session.GetString("UserId"), out long userId);
-            if (!res)
-                return null;
+            var followVehicle = await _context.FollowVehicles
+                .FirstOrDefaultAsync(x => x.PostVehicleId == postVehicleId && x.UserId == userId);
 
-            var followVehicles = await _context.FollowVehicles
-                .Where(x => x.UserId == userId)
-                .Include(x => x.PostVehicle)
-                .Include(x => x.User)
-                .ToListAsync();
+            _context.FollowVehicles.Remove(followVehicle);
 
-            return followVehicles;
+            await _context.SaveChangesAsync();
         }
 
         public async Task Toggle(long id)
@@ -54,19 +60,5 @@ namespace CarRental_BE.Repositories.FollowVehicle
 
             await _context.SaveChangesAsync();
         }
-
-        public async Task UnfollowVehicle(long postVehicleId)
-        {
-            var res = long.TryParse(_httpContextAccessor.HttpContext.Session.GetString("UserId"), out long userId);
-            if (!res)
-                return;
-            var followVehicle = await _context.FollowVehicles
-                .FirstOrDefaultAsync(x => x.PostVehicleId == postVehicleId && x.UserId == userId);
-
-            _context.FollowVehicles.Remove(followVehicle);
-
-            await _context.SaveChangesAsync();
-        }
-
     }
 }

@@ -8,6 +8,6 @@ namespace CarRental_BE.Repositories.ReviewVehicle
 
         Task Toggle(long id);
 
-        Task AddReview(ReviewVehicleVM vm);
+        Task AddReview(ReviewVehicleVM vm, long userId);
     }
 }

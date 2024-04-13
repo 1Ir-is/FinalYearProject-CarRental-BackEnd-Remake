@@ -1,8 +1,10 @@
 
 using CarRental_BE.Interfaces;
 using CarRental_BE.Repositories.DBContext;
+using CarRental_BE.Repositories.FollowVehicle;
 using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.RentVehicle;
+using CarRental_BE.Repositories.ReviewVehicle;
 using CarRental_BE.Repositories.User;
 using CarRental_BE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,12 +70,14 @@ builder.Services.AddAuthentication(options =>
 
 
 // Add scoped services
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUploadService,UploadService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostVehicleRepository, PostVehicleRepository>();
 builder.Services.AddScoped<IRentVehicleRepository, RentVehicleRepository>();
-
+builder.Services.AddScoped<IReviewVehicleRepository, ReviewVehicleRepository>();
+builder.Services.AddScoped<IFollowVehicleRepository, FollowVehicleRepository>();
 
 
 // Build the app

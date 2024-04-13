@@ -1,6 +1,10 @@
-﻿using CarRental_BE.Models.RentVehicle;
+﻿using CarRental_BE.Entities;
+using CarRental_BE.Models.RentVehicle;
+using CarRental_BE.Models.ReviewVehicle;
+using CarRental_BE.Repositories.FollowVehicle;
 using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.RentVehicle;
+using CarRental_BE.Repositories.ReviewVehicle;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +16,19 @@ namespace CarRental_BE.Controllers
     {
         private readonly IPostVehicleRepository _postVehicleRepository;
         private readonly IRentVehicleRepository _rentVehicleRepository;
+        private readonly IFollowVehicleRepository _followVehicleRepository;
+        private readonly IReviewVehicleRepository _reviewVehicleRepository;
 
-        public HomeController (IPostVehicleRepository postVehicleRepository, IRentVehicleRepository rentVehicleRepository)
+        public HomeController (IPostVehicleRepository postVehicleRepository, IRentVehicleRepository rentVehicleRepository, IFollowVehicleRepository followVehicleRepository, IReviewVehicleRepository reviewVehicleRepository)
         {
             _postVehicleRepository = postVehicleRepository;
             _rentVehicleRepository = rentVehicleRepository;
+            _followVehicleRepository = followVehicleRepository;
+            _reviewVehicleRepository = reviewVehicleRepository;
         }
 
+
+        #region PostVehicle
         [HttpGet("get-all-post-vehicles")]
         public async Task<IActionResult> GetAllPostVehicles()
         {
@@ -64,7 +74,10 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error searching post vehicles: {ex.Message}");
             }
         }
+        #endregion PostVehicle
 
+
+        #region RentVehicle
         [HttpPost("rent-vehicle/{userId}")]
         public async Task<IActionResult> RentVehicle([FromBody] RentVehicleVM vm, long userId)
         {
@@ -78,6 +91,86 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error renting vehicle: {ex.Message}");
             }
         }
+        #endregion RentVehicle
+
+        #region FollowVehicle
+
+        [HttpGet("get-all-follow-vehicles/{userId}")]
+        public async Task<IActionResult> GetAllFollowVehicles(long userId)
+        {
+            try
+            {
+                var followVehicles = await _followVehicleRepository.GetAllFollowVehicles(userId);
+                return Ok(followVehicles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving follow vehicles: {ex.Message}");
+            }
+        }
+
+        [HttpPost("follow-vehicle")]
+        public async Task<IActionResult> FollowVehicle([FromBody] dynamic requestBody)
+        {
+            try
+            {
+                long postVehicleId = requestBody.postVehicleId;
+                long userId = requestBody.userId;
+
+                if (postVehicleId <= 0 || userId <= 0)
+                    return BadRequest("Invalid postVehicleId or userId");
+
+                await _followVehicleRepository.FollowVehicle(postVehicleId, userId);
+                return Ok("Vehicle followed successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error following vehicle: {ex.Message}");
+            }
+        }
+
+        [HttpPost("unfollow-vehicle")]
+        public async Task<IActionResult> UnfollowVehicle([FromBody] dynamic requestBody)
+        {
+            try
+            {
+                long postVehicleId = requestBody.postVehicleId;
+                long userId = requestBody.userId;
+
+                if (postVehicleId <= 0 || userId <= 0)
+                    return BadRequest("Invalid postVehicleId or userId");
+
+                await _followVehicleRepository.UnfollowVehicle(postVehicleId, userId);
+                return Ok("Vehicle unfollowed successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error unfollowing vehicle: {ex.Message}");
+            }
+        }
+
+        #endregion FollowVehicle
+
+        #region ReviewVehicle
+
+
+        [HttpPost("add-review")]
+        public async Task<IActionResult> AddReview([FromBody] ReviewVehicleVM vm, long userId)
+        {
+            try
+            {
+                await _reviewVehicleRepository.AddReview(vm, userId);
+                return Ok("Review added successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error adding review: {ex.Message}");
+            }
+        }
+
+        #endregion ReviewVehicle
+
+
 
     }
 }

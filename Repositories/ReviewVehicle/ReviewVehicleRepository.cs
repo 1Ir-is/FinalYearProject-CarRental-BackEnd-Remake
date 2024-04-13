@@ -17,14 +17,14 @@ namespace CarRental_BE.Repositories.ReviewVehicle
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task AddReview(ReviewVehicleVM vm)
+        public async Task AddReview(ReviewVehicleVM vm, long userId)
         {
-            var res = long.TryParse(_httpContextAccessor.HttpContext.Session.GetString("UserId"), out long userId);
-            if (!res)
-                return;
             var postVehicle = await _context.PostVehicles.FindAsync(vm.PostVehicleId);
             if (postVehicle == null)
-                return;
+            {
+                throw new ArgumentException("Post vehicle not found");
+            }
+
             var review = new UserReviewVehicle
             {
                 UserId = userId,
@@ -36,13 +36,13 @@ namespace CarRental_BE.Repositories.ReviewVehicle
             };
 
             await _context.UserReviewVehicles.AddAsync(review);
-
             await _context.SaveChangesAsync();
 
             var user = await _context.Users
                 .Where(x => x.Id == userId)
                 .Include(x => x.UserReviewVehicles)
                 .FirstOrDefaultAsync();
+
             var lst = user.UserReviewVehicles.Where(x => x.Status).ToList();
             if (lst.Count > 0)
             {
@@ -51,16 +51,11 @@ namespace CarRental_BE.Repositories.ReviewVehicle
                 await _context.SaveChangesAsync();
             }
 
-            var pv = await _context.PostVehicles
-                .Include(x => x.UserRewviewCars)
-                .Where(x => x.Id == vm.PostVehicleId)
-                .FirstOrDefaultAsync();
-
-            lst = pv.UserRewviewCars.Where(x => x.Status).ToList();
+            lst = postVehicle.UserRewviewCars.Where(x => x.Status).ToList();
             if (lst.Count > 0)
             {
-                pv.Rating = lst.Average(x => x.Rating);
-                _context.PostVehicles.Update(pv);
+                postVehicle.Rating = lst.Average(x => x.Rating);
+                _context.PostVehicles.Update(postVehicle);
                 await _context.SaveChangesAsync();
             }
         }

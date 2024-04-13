@@ -2,11 +2,11 @@
 {
     public interface IFollowVehicleRepository
     {
-        Task FollowVehicle(long postVehicleId);
+        Task FollowVehicle(long postVehicleId, long userId);
 
-        Task UnfollowVehicle(long postVehicleId);
+        Task UnfollowVehicle(long postVehicleId, long userId);
 
-        Task<IEnumerable<Entities.FollowVehicle>> GetAllFollowVehicles();
+        Task<IEnumerable<Entities.FollowVehicle>> GetAllFollowVehicles(long userId);
 
         Task Toggle(long id);
     }
