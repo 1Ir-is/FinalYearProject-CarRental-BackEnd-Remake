@@ -1,4 +1,7 @@
-﻿using CarRental_BE.Models.RentVehicle;
+﻿using CarRental_BE.Common.Enums;
+using CarRental_BE.Entities;
+using CarRental_BE.Models.RentVehicle;
+using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +18,8 @@ namespace CarRental_BE.Repositories.RentVehicle
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task RentVehicle(RentVehicleVM vm)
+        public async Task RentVehicle(RentVehicleVM vm, long userId)
         {
-            var res = long.TryParse(_httpContextAccessor.HttpContext.Session.GetString("UserId"), out long userId);
-            if (!res)
-                return;
 
             var rentVehicle = new Entities.UserRentVehicle()
             {
@@ -38,5 +38,8 @@ namespace CarRental_BE.Repositories.RentVehicle
 
             await _context.SaveChangesAsync();
         }
+
+
+    
     }
 }
