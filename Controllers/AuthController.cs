@@ -19,6 +19,8 @@ namespace CarRental_BE.Controllers
             _userRepository = userRepository;
         }
 
+
+        #region Login
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginVM model)
         {
@@ -65,34 +67,6 @@ namespace CarRental_BE.Controllers
             return Ok(responseData);
         }
 
-
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterVM model)
-        {
-            var success = await _userRepository.Register(model);
-
-            if (!success)
-            {
-                return Conflict("User with this email already exists");
-            }
-
-            return Ok("Registration successful!");
-        }
-
-        [HttpPost("change-password")] // Add a new endpoint for changing password
-        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
-        {
-            var success = await _userRepository.ChangePasswordUser(model);
-
-            if (!success)
-            {
-                return BadRequest("Failed to change password. Please check your credentials.");
-            }
-
-            return Ok("Password changed successfully!");
-        }
-
         [HttpPost("google-login")]
         public async Task<IActionResult> GoogleLogin(GoogleLoginRequest request)
         {
@@ -115,6 +89,38 @@ namespace CarRental_BE.Controllers
 
             return Ok(responseData);
         }
+        #endregion Login
+
+        #region Register
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterVM model)
+        {
+            var success = await _userRepository.Register(model);
+
+            if (!success)
+            {
+                return Conflict("User with this email already exists");
+            }
+
+            return Ok("Registration successful!");
+        }
+        #endregion Register
+
+
+        #region ChangePassword
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM model)
+        {
+            var success = await _userRepository.ChangePasswordUser(model);
+
+            if (!success)
+            {
+                return BadRequest("Failed to change password. Please check your credentials.");
+            }
+
+            return Ok("Password changed successfully!");
+        }
+        #endregion ChangePassword
 
     }
 }

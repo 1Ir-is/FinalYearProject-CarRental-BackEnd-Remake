@@ -37,8 +37,6 @@ namespace CarRental_BE.Controllers
             }
         }
 
-
-
         [HttpPost("create-post/{userId}")]
         public async Task<IActionResult> AddPostVehicle(PostVehicleVM postVehicleVM, long userId)
         {
