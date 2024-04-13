@@ -60,6 +60,13 @@ namespace CarRental_BE.Repositories.ReviewVehicle
             }
         }
 
+        public async Task<IEnumerable<UserReviewVehicle>> GetReviewVehiclesForPost(long postVehicleId)
+        {
+            return await _context.UserReviewVehicles
+                .Where(x => x.PostVehicleId == postVehicleId)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<UserReviewVehicle>> GetAllReviewVehicles()
         {
             var reviews = await _context.UserReviewVehicles

@@ -1,5 +1,6 @@
 ﻿using CarRental_BE.Models.PostVehicle;
 using CarRental_BE.Repositories.PostVehicle;
+using CarRental_BE.Repositories.RentVehicle;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,13 @@ namespace CarRental_BE.Controllers
     {
         private readonly IPostVehicleRepository _postVehicleRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRentVehicleRepository _rentVehicleRepository;
 
-        public OwnerController(IPostVehicleRepository postVehicleRepository, IHttpContextAccessor httpContextAccessor)
+        public OwnerController(IPostVehicleRepository postVehicleRepository, IHttpContextAccessor httpContextAccessor, IRentVehicleRepository rentVehicleRepository)
         {
             _postVehicleRepository = postVehicleRepository;
             _httpContextAccessor = httpContextAccessor;
+            _rentVehicleRepository = rentVehicleRepository;
         }
 
        
@@ -77,6 +80,25 @@ namespace CarRental_BE.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting post vehicle: {ex.Message}");
+            }
+        }
+
+        [HttpGet("get-all-renters/{userId}")]
+        public async Task<IActionResult> GetAllRentersByUserId(long userId)
+        {
+            try
+            {
+                // Retrieve all renters associated with the specified user
+                var renters = await _rentVehicleRepository.GetAllRentersByUserId(userId);
+
+                if (renters == null || !renters.Any())
+                    return NotFound("No renters found for the specified user");
+
+                return Ok(renters);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving renters: {ex.Message}");
             }
         }
     }

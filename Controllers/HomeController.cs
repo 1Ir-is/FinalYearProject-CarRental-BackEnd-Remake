@@ -168,6 +168,19 @@ namespace CarRental_BE.Controllers
             }
         }
 
+        [HttpGet("review-car/{postVehicleId}")]
+        public async Task<ActionResult<IEnumerable<UserReviewVehicle>>> GetReviewVehiclesForPost(long postVehicleId)
+        {
+            var reviewVehicles = await _reviewVehicleRepository.GetReviewVehiclesForPost(postVehicleId);
+
+            if (reviewVehicles == null || !reviewVehicles.Any())
+            {
+                return NotFound("No review vehicles found for the specified PostVehicleId.");
+            }
+
+            return Ok(reviewVehicles);
+        }
+
         #endregion ReviewVehicle
 
 

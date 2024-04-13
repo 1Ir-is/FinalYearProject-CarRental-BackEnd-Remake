@@ -1,4 +1,5 @@
-﻿using CarRental_BE.Models.ReviewVehicle;
+﻿using CarRental_BE.Entities;
+using CarRental_BE.Models.ReviewVehicle;
 
 namespace CarRental_BE.Repositories.ReviewVehicle
 {
@@ -9,5 +10,6 @@ namespace CarRental_BE.Repositories.ReviewVehicle
         Task Toggle(long id);
 
         Task AddReview(ReviewVehicleVM vm, long userId);
+        Task<IEnumerable<UserReviewVehicle>> GetReviewVehiclesForPost(long postVehicleId);
     }
 }
