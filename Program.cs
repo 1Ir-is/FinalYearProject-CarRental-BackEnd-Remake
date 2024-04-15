@@ -70,9 +70,7 @@ builder.Services.AddAuthentication(options =>
 
 
 // Add scoped services
-builder.Services.AddScoped<IUploadService,UploadService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostVehicleRepository, PostVehicleRepository>();
 builder.Services.AddScoped<IRentVehicleRepository, RentVehicleRepository>();
