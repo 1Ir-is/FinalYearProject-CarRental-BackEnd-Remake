@@ -9,12 +9,10 @@ namespace CarRental_BE.Repositories.ReviewVehicle
     public class ReviewVehicleRepository : IReviewVehicleRepository
     {
         private readonly AppDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ReviewVehicleRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        public ReviewVehicleRepository(AppDbContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddReview(ReviewVehicleVM vm, long userId)

@@ -1,7 +1,6 @@
 ﻿using CarRental_BE.Models.PostVehicle;
 using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.RentVehicle;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental_BE.Controllers
@@ -11,13 +10,11 @@ namespace CarRental_BE.Controllers
     public class OwnerController : ControllerBase
     {
         private readonly IPostVehicleRepository _postVehicleRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRentVehicleRepository _rentVehicleRepository;
 
-        public OwnerController(IPostVehicleRepository postVehicleRepository, IHttpContextAccessor httpContextAccessor, IRentVehicleRepository rentVehicleRepository)
+        public OwnerController(IPostVehicleRepository postVehicleRepository, IRentVehicleRepository rentVehicleRepository)
         {
             _postVehicleRepository = postVehicleRepository;
-            _httpContextAccessor = httpContextAccessor;
             _rentVehicleRepository = rentVehicleRepository;
         }
 

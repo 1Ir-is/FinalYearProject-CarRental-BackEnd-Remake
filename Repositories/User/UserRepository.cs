@@ -17,25 +17,15 @@ namespace CarRental_BE.Repositories.User
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
-        private readonly IUploadService _uploadService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly HttpClient _httpClient;
 
-        private static string key { get; set; } = "A!9HHhi%XjjYY4YP2@Nob009X";
-
-        public UserRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor,
-            HttpClient httpClient)
+        public UserRepository(AppDbContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
-            _httpClient = httpClient;
         }
 
         public async Task<List<Entities.User>> GetAll()
         {
             var users = await _context.Users.Include(x => x.ApprovalApplication).ToListAsync();
-
-
             return users;
         }
 
@@ -57,23 +47,17 @@ namespace CarRental_BE.Repositories.User
             return user;
         }
 
-
-
         public async Task<Entities.User> Login(LoginVM request)
         {
             var user = await _context.Users
                 .Include(x => x.ApprovalApplication)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
-
             if (user == null || !user.Status)
                 return null;
-
-            // Check if the password retrieved from the database is not null
             if (user.Password != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return user;
             }
-
             return null;
         }
 
@@ -82,13 +66,10 @@ namespace CarRental_BE.Repositories.User
             var user = await _context.Users
                 .Include(x => x.ApprovalApplication)
                 .FirstOrDefaultAsync(x => x.Email == googleEmail);
-
             if (user == null || !user.Status)
             {
                 return null;
             }
-
-
             return user;
         }
 
@@ -102,7 +83,6 @@ namespace CarRental_BE.Repositories.User
             var u = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (u != null)
                 return false;
-
             var user = new Entities.User()
             {
                 Email = request.Email,
@@ -110,63 +90,44 @@ namespace CarRental_BE.Repositories.User
                 Password = HashPassword(request.Password),
                 Role = ROLE_TYPE.USER,
                 Avatar = "/user-content/default-user.png",
-                // You can set Address to null or empty string here if needed
             };
-
             await _context.Users.AddAsync(user);
-
             var res = await _context.SaveChangesAsync() > 0;
-
             return res;
         }
-
 
         public async Task<bool> EditInfoUser(UserEditVM request)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.userId);
-
             if (user == null)
             {
-                return false; // User not found
+                return false;
             }
-
             user.Name = request.Name;
             user.Address = request.Address;
             user.Phone = request.Phone;
             user.Avatar = request.Avatar;
-
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
-
-           
+            await _context.SaveChangesAsync(); 
             return true;
         }
 
         public async Task<bool> ChangePasswordUser(ChangePasswordVM vm)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == vm.Id);
-
             if (user == null)
             {
-                return false; // User not found
+                return false; 
             }
-
-            // Verify the old password using bcrypt
             if (!BCrypt.Net.BCrypt.Verify(vm.OldPassword, user.Password))
             {
-                return false; // Old password doesn't match
+                return false; 
             }
-
-            // Hash the new password using bcrypt
             user.Password = HashPassword(vm.NewPassword);
-
             _context.Users.Update(user);
-
             var success = await _context.SaveChangesAsync() > 0;
-
             return success;
         }
-
 
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
         {
@@ -192,20 +153,18 @@ namespace CarRental_BE.Repositories.User
         {
             try
             {
-                // Fetch the user's approval application
                 var approvalApplication = await _context.ApprovalApplications.FirstOrDefaultAsync(app => app.UserId == userId);
 
                 if (approvalApplication != null)
                 {
-                    return approvalApplication.RequestStatus.ToString(); // Return the request status
+                    return approvalApplication.RequestStatus.ToString(); 
                 }
 
-                return REQUEST_STATUS.NotApprovedYet.ToString(); // If no application found, return "NotApprovedYet"
+                return REQUEST_STATUS.NotApprovedYet.ToString(); 
             }
             catch (Exception ex)
             {
-                // Log or handle the exception
-                return REQUEST_STATUS.NotApprovedYet.ToString(); // Return "NotApprovedYet" in case of an error
+                return REQUEST_STATUS.NotApprovedYet.ToString(); 
             }
         }
 
@@ -213,15 +172,11 @@ namespace CarRental_BE.Repositories.User
         {
             try
             {
-                // Retrieve the user by their ID
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
-                // If the user is found, return their avatar URL
                 return user != null ? user.Avatar : null;
             }
             catch (Exception ex)
             {
-                // Handle any exceptions and return null in case of an error
                 Console.WriteLine($"Error retrieving user avatar: {ex.Message}");
                 return null;
             }
@@ -277,28 +232,22 @@ namespace CarRental_BE.Repositories.User
 {
             try
             {
-                // Verify the Google token
                 var payload = await GoogleJsonWebSignature.ValidateAsync(token);
-
-                // Extract user information from the verified token
                 var email = payload.Email;
                 var name = payload.Name;
                 var avatar = payload.Picture;
 
-                // Check if the user already exists in the database
                 var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
                 if (existingUser != null)
                 {
-                    // User already exists, update information
                     existingUser.Name = name;
                     existingUser.Avatar = avatar;
-                    // You can update other properties here if needed
 
                     _context.Users.Update(existingUser);
                     await _context.SaveChangesAsync();
 
-                    return existingUser; // Return the existing user
+                    return existingUser;
                 }
 
                 // Create a new user entry in the database
@@ -308,24 +257,20 @@ namespace CarRental_BE.Repositories.User
                     Email = email,
                     Role = ROLE_TYPE.USER,
                     Avatar = avatar ?? "/user-content/default-user.png"
-                    // You can set additional properties here if needed
                 };
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                return newUser; // Return the newly registered user
+                return newUser;
 
 
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine($"Error logging in with Google: {ex.Message}");
                 return null;
             }
         }
-
-
     }
 }

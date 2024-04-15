@@ -1,5 +1,4 @@
-﻿
-using CarRental_BE.Common.Enums;
+﻿using CarRental_BE.Common.Enums;
 
 namespace CarRental_BE.Entities
 {

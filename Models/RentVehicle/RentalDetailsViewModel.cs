@@ -10,7 +10,5 @@ namespace CarRental_BE.Models.RentVehicle
         public string UserPhoneNumber { get; set; }
         public DateTime RentalStartDate { get; set; }
         public DateTime RentalEndDate { get; set; }
-        // You can add more properties as needed
     }
-
 }

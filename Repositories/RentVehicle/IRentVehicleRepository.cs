@@ -9,5 +9,6 @@ namespace CarRental_BE.Repositories.RentVehicle
         Task<IEnumerable<UserRentVehicle>> GetAllRentersByUserId(long userId);
         /*        Task<List<UserRentVehicle>> GetRentalDetailsByVehicleId(long vehicleId);*/
         Task<List<UserRentVehicleDTO>> GetRentalDetailsByVehicleId(long vehicleId);
+        Task<IEnumerable<RentedVehicleDTO>> GetAllVehiclesRentedByUserId(long userId);
     }
 }

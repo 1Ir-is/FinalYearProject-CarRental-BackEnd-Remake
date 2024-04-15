@@ -1,7 +1,5 @@
-﻿using CarRental_BE.Common.Enums;
-using CarRental_BE.Entities;
+﻿using CarRental_BE.Entities;
 using CarRental_BE.Models.RentVehicle;
-using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,16 +32,13 @@ namespace CarRental_BE.Repositories.RentVehicle
                 TotalPrice = vm.TotalPrice.Value
             };
 
-            // Handle nullable TotalPrice
             if (vm.TotalPrice.HasValue)
             {
-                rentVehicle.TotalPrice = vm.TotalPrice.Value; // Explicitly convert nullable decimal? to decimal
+                rentVehicle.TotalPrice = vm.TotalPrice.Value;
             }
             else
             {
-                // Handle the case where TotalPrice is null (optional)
-                // For example, set a default value
-                rentVehicle.TotalPrice = 0; // Set default value to 0 or any other appropriate default value
+                rentVehicle.TotalPrice = 0; 
             }
 
             await _context.UserRentVehicles.AddAsync(rentVehicle);
@@ -55,7 +50,6 @@ namespace CarRental_BE.Repositories.RentVehicle
         {
             try
             {
-                // Retrieve all renters associated with the specified user
                 var renters = await _context.UserRentVehicles
                     .Where(rv => rv.UserId == userId)
                     .ToListAsync();
@@ -63,8 +57,7 @@ namespace CarRental_BE.Repositories.RentVehicle
                 return renters;
             }
             catch (Exception ex)
-            {
-                // Handle exceptions appropriately
+            {             
                 throw ex;
             }
         }
@@ -80,13 +73,12 @@ namespace CarRental_BE.Repositories.RentVehicle
         {
             try
             {
-                // Query the database to retrieve rental details based on the provided vehicleId
                 var rentalDetails = await _context.UserRentVehicles
-                    .Include(urv => urv.PostVehicle) // Include the related PostVehicle entity
+                    .Include(urv => urv.PostVehicle) 
                     .Where(urv => urv.PostVehicleId == vehicleId)
                     .Select(urv => new UserRentVehicleDTO
                     {
-                        userId = urv.UserId ?? 0, // Provide a default value if UserId is null
+                        userId = urv.UserId ?? 0, 
                         Name = urv.Name,
                         Phone = urv.Phone,
                         Email = urv.Email,
@@ -94,7 +86,7 @@ namespace CarRental_BE.Repositories.RentVehicle
                         StartDate = urv.StartDate,
                         EndDate = urv.EndDate,
                         TotalPrice = urv.TotalPrice,
-                        VehicleName = urv.PostVehicle.VehicleName // Access the VehicleName property from the related PostVehicle entity
+                        VehicleName = urv.PostVehicle.VehicleName
                     })
                     .ToListAsync();
 
@@ -102,13 +94,43 @@ namespace CarRental_BE.Repositories.RentVehicle
             }
             catch (Exception ex)
             {
-                // Handle exceptions appropriately
                 throw ex;
             }
         }
 
+        public async Task<IEnumerable<RentedVehicleDTO>> GetAllVehiclesRentedByUserId(long userId)
+        {
+            try
+            {
+                var rentedVehicles = await _context.UserRentVehicles
+                    .Include(urv => urv.PostVehicle)
+                    .Include(urv => urv.User) 
+                    .Where(urv => urv.UserId == userId)
+                    .Select(urv => new RentedVehicleDTO
+                    {
+                        VehicleName = urv.PostVehicle.VehicleName,
+                        VehicleFuel = urv.PostVehicle.VehicleFuel,
+                        VehicleType = urv.PostVehicle.VehicleType,
+                        VehicleYear = urv.PostVehicle.VehicleYear ?? 0,
+                        VehicleSeat = urv.PostVehicle.VehicleSeat ?? 0,
+                        Price = urv.PostVehicle.Price ?? 0,
+                        StartDate = urv.StartDate,
+                        EndDate = urv.EndDate,
+                        UserName = urv.User.Name,
+                        Phone = urv.User.Phone,
+                        Email = urv.User.Email,
+                        Name = urv.Name, 
+                        CreatedAt = urv.CreatedAt 
+                    })
+                    .ToListAsync();
 
-
-
+                return rentedVehicles;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
+

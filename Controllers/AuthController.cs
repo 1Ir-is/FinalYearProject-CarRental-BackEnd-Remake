@@ -1,10 +1,7 @@
-﻿using CarRental_BE.Entities;
-using CarRental_BE.Models.Auth;
+﻿using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace CarRental_BE.Controllers
 {

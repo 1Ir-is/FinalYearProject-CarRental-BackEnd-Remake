@@ -6,12 +6,10 @@ namespace CarRental_BE.Repositories.FollowVehicle
     public class FollowVehicleRepository : IFollowVehicleRepository
     {
         private readonly AppDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FollowVehicleRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+        public FollowVehicleRepository(AppDbContext context)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<Entities.FollowVehicle>> GetAllFollowVehicles(long userId)

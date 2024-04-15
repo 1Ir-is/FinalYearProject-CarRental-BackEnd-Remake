@@ -1,23 +1,17 @@
 ﻿using CarRental_BE.Interfaces;
 using CarRental_BE.Models.PostVehicle;
-using CarRental_BE.Services;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental_BE.Repositories.PostVehicle
 {
     public class PostVehicleRepository : IPostVehicleRepository
     {
         private readonly AppDbContext _context;
-        private readonly IUploadService _uploadService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PostVehicleRepository(AppDbContext context, IUploadService uploadService, IHttpContextAccessor httpContextAccessor)
+        public PostVehicleRepository(AppDbContext context)
         {
             _context = context;
-            _uploadService = uploadService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddPostVehicle(PostVehicleVM ev, long userId)
@@ -92,7 +86,6 @@ namespace CarRental_BE.Repositories.PostVehicle
                     throw new Exception("Post vehicle not found");
                 }
 
-                // Merge changes from postVehicleVM into existingPostVehicle
                 existingPostVehicle.VehicleName = postVehicleVM.VehicleName ?? existingPostVehicle.VehicleName;
                 existingPostVehicle.VehicleFuel = postVehicleVM.VehicleFuel ?? existingPostVehicle.VehicleFuel;
                 existingPostVehicle.VehicleType = postVehicleVM.VehicleType ?? existingPostVehicle.VehicleType;
@@ -102,18 +95,17 @@ namespace CarRental_BE.Repositories.PostVehicle
                 existingPostVehicle.Address = postVehicleVM.Address ?? existingPostVehicle.Address;
                 existingPostVehicle.PlaceId = postVehicleVM.PlaceId ?? existingPostVehicle.PlaceId;
 
-                // Handle nullable types
                 existingPostVehicle.VehicleYear = postVehicleVM.VehicleYear != 0 ? postVehicleVM.VehicleYear : existingPostVehicle.VehicleYear;
                 existingPostVehicle.VehicleSeat = postVehicleVM.VehicleSeat != 0 ? postVehicleVM.VehicleSeat : existingPostVehicle.VehicleSeat;
                 existingPostVehicle.Price = postVehicleVM.Price != 0 ? postVehicleVM.Price : existingPostVehicle.Price;
 
-                // If the Image property is not null or empty, update the image
+
                 if (!string.IsNullOrEmpty(postVehicleVM.Image))
                 {
                     existingPostVehicle.Image = postVehicleVM.Image;
                 }
 
-                // Update the entity in the database
+     
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)

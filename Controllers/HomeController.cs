@@ -5,7 +5,6 @@ using CarRental_BE.Repositories.FollowVehicle;
 using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.RentVehicle;
 using CarRental_BE.Repositories.ReviewVehicle;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental_BE.Controllers
@@ -118,16 +117,30 @@ namespace CarRental_BE.Controllers
                 var rentalDetails = await _rentVehicleRepository.GetRentalDetailsByVehicleId(vehicleId);
                 if (rentalDetails == null)
                 {
-                    return NotFound(); // Return 404 Not Found if no rental details are found
+                    return NotFound(); 
                 }
-                return Ok(rentalDetails); // Return the rental details if found
+                return Ok(rentalDetails); 
             }
             catch (Exception ex)
             {
-                // Log the exception or return a more appropriate response
-                return StatusCode(500, "Internal server error"); // Return 500 Internal Server Error
+                return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("get-all-rented-vehicles/{userId}")]
+        public async Task<IActionResult> GetAllRentedVehicles(long userId)
+        {
+            try
+            {
+                var rentedVehicles = await _rentVehicleRepository.GetAllVehiclesRentedByUserId(userId);
+                return Ok(rentedVehicles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving rented vehicles: {ex.Message}");
+            }
+        }
+
 
         #endregion RentVehicle
 

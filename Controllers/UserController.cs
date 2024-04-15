@@ -1,13 +1,7 @@
 ﻿using CarRental_BE.Entities;
-using CarRental_BE.Interfaces;
 using CarRental_BE.Models.User;
-using CarRental_BE.Repositories.DBContext;
-using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace CarRental_BE.Controllers
 {
@@ -16,12 +10,10 @@ namespace CarRental_BE.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPostVehicleRepository _postVehicleRepository;
 
-        public UserController(IUserRepository userRepository, IPostVehicleRepository postVehicleRepository)
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _postVehicleRepository = postVehicleRepository;
         }
 
 
