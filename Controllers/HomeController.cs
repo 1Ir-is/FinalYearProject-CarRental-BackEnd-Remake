@@ -91,6 +91,25 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error renting vehicle: {ex.Message}");
             }
         }
+
+        [HttpGet("get-rental-details/{id}")]
+        public async Task<IActionResult> GetRentalDetails(long id)
+        {
+            try
+            {
+                var rentalDetails = await _rentVehicleRepository.GetRentalDetailsByVehicleId(id);
+                if (rentalDetails == null)
+                {
+                    return NotFound("Rental details not found");
+                }
+                return Ok(rentalDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving rental details: {ex.Message}");
+            }
+        }
+
         #endregion RentVehicle
 
         #region FollowVehicle

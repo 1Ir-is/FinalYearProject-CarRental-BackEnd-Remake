@@ -30,7 +30,8 @@ namespace CarRental_BE.Repositories.RentVehicle
                 Note = vm.Note,
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                TotalPrice = vm.TotalPrice.Value
             };
 
             // Handle nullable TotalPrice
@@ -68,6 +69,12 @@ namespace CarRental_BE.Repositories.RentVehicle
             }
         }
 
+        public async Task<List<UserRentVehicle>> GetRentalDetailsByVehicleId(long vehicleId)
+        {
+            return await _context.UserRentVehicles
+                .Where(urv => urv.PostVehicleId == vehicleId)
+                .ToListAsync();
+        }
 
     }
 }

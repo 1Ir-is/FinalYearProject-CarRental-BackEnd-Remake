@@ -7,5 +7,6 @@ namespace CarRental_BE.Repositories.RentVehicle
     {
         Task RentVehicle(RentVehicleVM vm, long userId);
         Task<IEnumerable<UserRentVehicle>> GetAllRentersByUserId(long userId);
+        Task<List<UserRentVehicle>> GetRentalDetailsByVehicleId(long vehicleId);
     }
 }
