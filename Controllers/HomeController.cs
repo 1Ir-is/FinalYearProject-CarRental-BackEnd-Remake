@@ -110,6 +110,25 @@ namespace CarRental_BE.Controllers
             }
         }
 
+        [HttpGet("GetRentalDetailsByVehicleId/{vehicleId}")]
+        public async Task<ActionResult<IEnumerable<UserRentVehicleDTO>>> GetRentalDetailsByVehicleId(long vehicleId)
+        {
+            try
+            {
+                var rentalDetails = await _rentVehicleRepository.GetRentalDetailsByVehicleId(vehicleId);
+                if (rentalDetails == null)
+                {
+                    return NotFound(); // Return 404 Not Found if no rental details are found
+                }
+                return Ok(rentalDetails); // Return the rental details if found
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or return a more appropriate response
+                return StatusCode(500, "Internal server error"); // Return 500 Internal Server Error
+            }
+        }
+
         #endregion RentVehicle
 
         #region FollowVehicle

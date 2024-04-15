@@ -69,12 +69,46 @@ namespace CarRental_BE.Repositories.RentVehicle
             }
         }
 
-        public async Task<List<UserRentVehicle>> GetRentalDetailsByVehicleId(long vehicleId)
+        /*  public async Task<List<UserRentVehicle>> GetRentalDetailsByVehicleId(long vehicleId)
+          {
+              return await _context.UserRentVehicles
+                  .Where(urv => urv.PostVehicleId == vehicleId)
+                  .ToListAsync();
+          }*/
+
+        public async Task<List<UserRentVehicleDTO>> GetRentalDetailsByVehicleId(long vehicleId)
         {
-            return await _context.UserRentVehicles
-                .Where(urv => urv.PostVehicleId == vehicleId)
-                .ToListAsync();
+            try
+            {
+                // Query the database to retrieve rental details based on the provided vehicleId
+                var rentalDetails = await _context.UserRentVehicles
+                    .Include(urv => urv.PostVehicle) // Include the related PostVehicle entity
+                    .Where(urv => urv.PostVehicleId == vehicleId)
+                    .Select(urv => new UserRentVehicleDTO
+                    {
+                        userId = urv.UserId ?? 0, // Provide a default value if UserId is null
+                        Name = urv.Name,
+                        Phone = urv.Phone,
+                        Email = urv.Email,
+                        Note = urv.Note,
+                        StartDate = urv.StartDate,
+                        EndDate = urv.EndDate,
+                        TotalPrice = urv.TotalPrice,
+                        VehicleName = urv.PostVehicle.VehicleName // Access the VehicleName property from the related PostVehicle entity
+                    })
+                    .ToListAsync();
+
+                return rentalDetails;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions appropriately
+                throw ex;
+            }
         }
+
+
+
 
     }
 }
