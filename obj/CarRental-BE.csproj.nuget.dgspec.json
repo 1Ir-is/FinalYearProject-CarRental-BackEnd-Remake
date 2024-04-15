@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {}
+    "D:\\Final Year\\Final Year Project - CarRental\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {}
   },
   "projects": {
-    "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {
+    "D:\\Final Year\\Final Year Project - CarRental\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
+        "projectUniqueName": "D:\\Final Year\\Final Year Project - CarRental\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
         "projectName": "CarRental-BE",
-        "projectPath": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
+        "projectPath": "D:\\Final Year\\Final Year Project - CarRental\\CarRental-BE\\CarRental-BE\\CarRental-BE.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\Final Year\\CarRental-BE\\CarRental-BE\\obj\\",
+        "outputPath": "D:\\Final Year\\Final Year Project - CarRental\\CarRental-BE\\CarRental-BE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
