@@ -10,11 +10,12 @@
         public decimal Price { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string UserName { get; set; } // User name
-        public string Phone { get; set; } // User phone
-        public string Email { get; set; } // User email
-        public DateTime CreatedAt { get; set; } // Rental creation date
-        public string Name { get; set; } // Name from the form
-        public string PhoneNumber { get; set; } // Phone number from the form
+        public string UserName { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Name { get; set; }
+        public string PhoneNumber { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

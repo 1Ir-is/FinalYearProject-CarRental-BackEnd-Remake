@@ -104,7 +104,7 @@ namespace CarRental_BE.Repositories.RentVehicle
             {
                 var rentedVehicles = await _context.UserRentVehicles
                     .Include(urv => urv.PostVehicle)
-                    .Include(urv => urv.User) 
+                    .Include(urv => urv.User)
                     .Where(urv => urv.UserId == userId)
                     .Select(urv => new RentedVehicleDTO
                     {
@@ -119,8 +119,9 @@ namespace CarRental_BE.Repositories.RentVehicle
                         UserName = urv.User.Name,
                         Phone = urv.User.Phone,
                         Email = urv.User.Email,
-                        Name = urv.Name, 
-                        CreatedAt = urv.CreatedAt 
+                        Name = urv.Name,
+                        CreatedAt = urv.CreatedAt,
+                        TotalPrice = (decimal)(urv.EndDate - urv.StartDate).TotalDays * (urv.PostVehicle.Price ?? 0)
                     })
                     .ToListAsync();
 
@@ -131,6 +132,7 @@ namespace CarRental_BE.Repositories.RentVehicle
                 throw ex;
             }
         }
+
     }
 }
 
