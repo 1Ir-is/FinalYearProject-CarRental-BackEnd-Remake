@@ -392,3 +392,9 @@ D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\obj\Debug
 D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRenta.1052EBAA.Up2Date
 D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\obj\Debug\net6.0\CarRental-BE.genruntimeconfig.cache
 D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\obj\Debug\net6.0\ref\CarRental-BE.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\MailKit.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\MimeKit.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\System.Formats.Asn1.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\Final Year\Final Year Project - CarRental\CarRental-BE\CarRental-BE\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll

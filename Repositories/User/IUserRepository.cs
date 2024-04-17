@@ -18,5 +18,8 @@ namespace CarRental_BE.Repositories.User
         Task<string> GetRequestStatus(long userId);
         Task<string> GetUserAvatar(long userId);
         Task<Entities.User> LoginWithGoogle(string token);
+        Task StoreResetKey(string email, string resetKey);
+        Task<bool> VerifyResetKey(string email, string resetKey);
+        Task ResetPassword(string email, string newPassword);
     }
 }

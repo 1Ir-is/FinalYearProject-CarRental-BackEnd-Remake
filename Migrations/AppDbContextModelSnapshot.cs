@@ -189,6 +189,13 @@ namespace CarRental_BE.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ResetKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResetKeyTimestamp")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
@@ -212,6 +219,7 @@ namespace CarRental_BE.Migrations
                             Name = "Admin",
                             Password = "$2a$11$pEnPQk9YRgS.JFC7EmWSQOOh9PLscgs4D/q0iykEB8a2xpp.tbj5K",
                             Phone = "0123456789",
+                            ResetKey = "",
                             Role = 0,
                             Status = true,
                             TrustPoint = 0.0

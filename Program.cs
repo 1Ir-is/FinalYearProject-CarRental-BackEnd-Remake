@@ -1,5 +1,6 @@
 
 using CarRental_BE.Interfaces;
+using CarRental_BE.Models.Auth;
 using CarRental_BE.Repositories.DBContext;
 using CarRental_BE.Repositories.FollowVehicle;
 using CarRental_BE.Repositories.PostVehicle;
@@ -67,10 +68,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSetting"));
 
 // Add scoped services
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IMailService, MailService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPostVehicleRepository, PostVehicleRepository>();
 builder.Services.AddScoped<IRentVehicleRepository, RentVehicleRepository>();

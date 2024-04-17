@@ -17,10 +17,12 @@ namespace CarRental_BE.Repositories.User
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMailService _mailService;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(AppDbContext context, IMailService mailService)
         {
             _context = context;
+            _mailService = mailService;
         }
 
         public async Task<List<Entities.User>> GetAll()
@@ -83,6 +85,7 @@ namespace CarRental_BE.Repositories.User
             var u = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (u != null)
                 return false;
+
             var user = new Entities.User()
             {
                 Email = request.Email,
@@ -90,11 +93,15 @@ namespace CarRental_BE.Repositories.User
                 Password = HashPassword(request.Password),
                 Role = ROLE_TYPE.USER,
                 Avatar = "/user-content/default-user.png",
+                ResetKey = "", // Provide a default value for ResetKey
+                ResetKeyTimestamp = null // Set ResetKeyTimestamp to null or provide a default value if needed
             };
+
             await _context.Users.AddAsync(user);
             var res = await _context.SaveChangesAsync() > 0;
             return res;
         }
+
 
         public async Task<bool> EditInfoUser(UserEditVM request)
         {
@@ -127,6 +134,45 @@ namespace CarRental_BE.Repositories.User
             _context.Users.Update(user);
             var success = await _context.SaveChangesAsync() > 0;
             return success;
+        }
+
+
+        public async Task StoreResetKey(string email, string resetKey)
+        {
+            // Store the reset key in the database along with the user's email and a timestamp
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user != null)
+            {
+                user.ResetKey = resetKey;
+                user.ResetKeyTimestamp = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> VerifyResetKey(string email, string resetKey)
+        {
+            // Verify the reset key from the database and check if it's still valid
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.ResetKey == resetKey);
+            if (user != null && user.ResetKeyTimestamp.HasValue && DateTime.UtcNow.Subtract(user.ResetKeyTimestamp.Value).TotalHours < 1)
+            {
+                // Reset key is valid and within 1 hour of generation
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task ResetPassword(string email, string newPassword)
+        {
+            // Reset the user's password in the database
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user != null)
+            {
+                user.Password = HashPassword(newPassword);
+                user.ResetKey = null; // Clear the reset key after password reset
+                user.ResetKeyTimestamp = null;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
@@ -272,5 +318,9 @@ namespace CarRental_BE.Repositories.User
                 return null;
             }
         }
+
+
+
+
     }
 }

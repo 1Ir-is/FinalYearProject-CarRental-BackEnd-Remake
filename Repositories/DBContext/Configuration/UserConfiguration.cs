@@ -18,7 +18,9 @@ namespace CarRental_BE.Repositories.DBContext.Configuration
                 Phone = "0123456789",
                 Avatar = "/user-content/default-user.png",
                 Role = ROLE_TYPE.ADMIN,
-                Status = true
+                Status = true,
+                ResetKey = "", // Provide a default value for ResetKey
+                ResetKeyTimestamp = null // Set ResetKeyTimestamp to null or provide a default value if needed
             });
         }
     }

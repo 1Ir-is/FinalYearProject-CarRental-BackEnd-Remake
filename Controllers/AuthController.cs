@@ -1,4 +1,5 @@
-﻿using CarRental_BE.Models.Auth;
+﻿using CarRental_BE.Interfaces;
+using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,13 @@ namespace CarRental_BE.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMailService _mailService;
 
-        public AuthController(IUserRepository userRepository)
+
+        public AuthController(IUserRepository userRepository, IMailService mailService)
         {
             _userRepository = userRepository;
+            _mailService = mailService;
         }
 
 
@@ -118,6 +122,68 @@ namespace CarRental_BE.Controllers
             return Ok("Password changed successfully!");
         }
         #endregion ChangePassword
+
+        #region Forgot Password
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody]string email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email))
+                {
+                    return BadRequest("Email address is required");
+                }
+
+                // Generate a unique reset key (you can use Guid or any other method)
+                string resetKey = Guid.NewGuid().ToString();
+
+                // Store the reset key in the database along with the user's email and a timestamp
+                await _userRepository.StoreResetKey(email, resetKey);
+
+                // Compose the email content with the reset link (replace example.com with your actual domain)
+                string resetLink = $"http://example.com/reset-password?email={email}&resetKey={resetKey}";
+                string subject = "Password Reset";
+                string body = $"Click <a href='{resetLink}'>here</a> to reset your password.";
+
+                // Send the password reset email
+                await _mailService.SendEmailAsync(email, subject, body);
+
+                return Ok("Password reset email sent successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+
+
+        #endregion Forgot Password   
+
+
+        #region Reset Password
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(string email, string resetKey, string newPassword)
+        {
+            try
+            {
+                // Verify the reset key from the database
+                var result = await _userRepository.VerifyResetKey(email, resetKey);
+                if (!result)
+                    return NotFound("Invalid or expired reset key");
+
+                // Reset the user's password
+                await _userRepository.ResetPassword(email, newPassword);
+
+                return Ok("Password reset successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+        #endregion Reset Password
 
     }
 }
