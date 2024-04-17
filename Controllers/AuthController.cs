@@ -147,7 +147,8 @@ namespace CarRental_BE.Controllers
                 string htmlContent = await System.IO.File.ReadAllTextAsync(filePath);
 
                 // Replace placeholders in the HTML content with actual values
-                htmlContent = htmlContent.Replace("{resetLink}", $"http://example.com/reset-password?email={email}&resetKey={resetKey}");
+                htmlContent = htmlContent.Replace("{resetLink}", $"http://localhost:3000/reset-password/{email}/{resetKey}");
+
 
                 // Send the password reset email
                 await _mailService.SendEmailAsync(email, "Password Reset", htmlContent);
@@ -167,17 +168,17 @@ namespace CarRental_BE.Controllers
 
         #region Reset Password
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword(string email, string resetKey, string newPassword)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
             try
             {
                 // Verify the reset key from the database
-                var result = await _userRepository.VerifyResetKey(email, resetKey);
+                var result = await _userRepository.VerifyResetKey(model.Email, model.ResetKey);
                 if (!result)
                     return NotFound("Invalid or expired reset key");
 
                 // Reset the user's password
-                await _userRepository.ResetPassword(email, newPassword);
+                await _userRepository.ResetPassword(model.Email, model.NewPassword);
 
                 return Ok("Password reset successfully");
             }

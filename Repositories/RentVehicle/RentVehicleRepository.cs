@@ -116,10 +116,11 @@ namespace CarRental_BE.Repositories.RentVehicle
                         Price = urv.PostVehicle.Price ?? 0,
                         StartDate = urv.StartDate,
                         EndDate = urv.EndDate,
-                        UserName = urv.User.Name,
-                        Phone = urv.User.Phone,
-                        Email = urv.User.Email,
-                        Name = urv.Name,
+                        UserName = urv.Name,
+                        Phone = urv.Phone, // Use phone from rental information
+                        Email = urv.Email, // Use email from rental information
+                        Name = urv.User.Name, // Assuming you want to keep the user's name
+                        Note = urv.Note,
                         CreatedAt = urv.CreatedAt,
                         TotalPrice = (decimal)(urv.EndDate - urv.StartDate).TotalDays * (urv.PostVehicle.Price ?? 0)
                     })
@@ -132,6 +133,7 @@ namespace CarRental_BE.Repositories.RentVehicle
                 throw ex;
             }
         }
+
 
     }
 }

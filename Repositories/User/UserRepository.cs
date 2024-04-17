@@ -54,14 +54,19 @@ namespace CarRental_BE.Repositories.User
             var user = await _context.Users
                 .Include(x => x.ApprovalApplication)
                 .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+            // Check if the user object is null
             if (user == null || !user.Status)
                 return null;
+
+            // Ensure that user.Password is not null before calling BCrypt.Verify
             if (user.Password != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return user;
             }
             return null;
         }
+
 
         public async Task<Entities.User> LoginWithGoogleEmail(string googleEmail)
         {
@@ -164,16 +169,28 @@ namespace CarRental_BE.Repositories.User
 
         public async Task ResetPassword(string email, string newPassword)
         {
-            // Reset the user's password in the database
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user != null)
+            try
             {
-                user.Password = HashPassword(newPassword);
-                user.ResetKey = null; // Clear the reset key after password reset
-                user.ResetKeyTimestamp = null;
-                await _context.SaveChangesAsync();
+                // Retrieve the user from the database
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    // Reset the user's password
+                    user.Password = HashPassword(newPassword);
+
+                    // Save changes to the database
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error resetting password for {email}: {ex.Message}");
+                throw; // Rethrow the exception to handle it at a higher level
             }
         }
+
+
 
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
         {
