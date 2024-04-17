@@ -3,6 +3,8 @@ using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
 using CarRental_BE.Repositories.User;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Text;
 
 namespace CarRental_BE.Controllers
 {
@@ -125,7 +127,7 @@ namespace CarRental_BE.Controllers
 
         #region Forgot Password
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody]string email)
+        public async Task<IActionResult> ForgotPassword([FromBody] string email)
         {
             try
             {
@@ -140,13 +142,15 @@ namespace CarRental_BE.Controllers
                 // Store the reset key in the database along with the user's email and a timestamp
                 await _userRepository.StoreResetKey(email, resetKey);
 
-                // Compose the email content with the reset link (replace example.com with your actual domain)
-                string resetLink = $"http://example.com/reset-password?email={email}&resetKey={resetKey}";
-                string subject = "Password Reset";
-                string body = $"Click <a href='{resetLink}'>here</a> to reset your password.";
+                // Read the content of the ResetPassword.html file
+                string filePath = Path.Combine("EmailHtml", "ResetPassword.html");
+                string htmlContent = await System.IO.File.ReadAllTextAsync(filePath);
+
+                // Replace placeholders in the HTML content with actual values
+                htmlContent = htmlContent.Replace("{resetLink}", $"http://example.com/reset-password?email={email}&resetKey={resetKey}");
 
                 // Send the password reset email
-                await _mailService.SendEmailAsync(email, subject, body);
+                await _mailService.SendEmailAsync(email, "Password Reset", htmlContent);
 
                 return Ok("Password reset email sent successfully");
             }
