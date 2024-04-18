@@ -1,4 +1,5 @@
-﻿using CarRental_BE.Models.Auth;
+﻿
+using CarRental_BE.Models.Auth;
 using CarRental_BE.Models.User;
 
 namespace CarRental_BE.Repositories.User
@@ -10,7 +11,7 @@ namespace CarRental_BE.Repositories.User
         Task<Entities.User> Login(LoginVM request);
         Task<Entities.User> LoginWithGoogleEmail(string googleEmail);
         Task<bool> EditInfoUser(UserEditVM request);
-
+        Task<Entities.User> GetUserByEmail(string email);
         Task<Entities.User> GetById(long id);
         Task<UserDTO> GetUserById(long userId);
         Task<List<Entities.User>> GetAll();
@@ -19,7 +20,9 @@ namespace CarRental_BE.Repositories.User
         Task<string> GetRequestStatus(long userId);
         Task<string> GetUserAvatar(long userId);
         Task<Entities.User> LoginWithGoogle(string token);
-        Task StoreResetKey(string email, string resetKey);
+        Task<(string ResetKey, DateTime? ResetKeyTimestamp)> GetResetKeyInfo(string email, string resetKey);
+
+        Task StoreResetKey(string email, string resetKey, DateTime timestamp);
         Task<bool> VerifyResetKey(string email, string resetKey);
         Task ResetPassword(string email, string newPassword);
     }

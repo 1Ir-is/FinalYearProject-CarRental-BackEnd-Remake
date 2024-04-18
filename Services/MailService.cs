@@ -1,20 +1,14 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using CarRental_BE.Interfaces;
 using CarRental_BE.Models.Auth;
-using MailKit.Security;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit;
 
 namespace CarRental_BE.Services
 {
     public class MailService : IMailService
     {
         private readonly EmailSettings _emailSettings;
-        private readonly ILogger<MailService> logger;
 
         public MailService(IOptions<EmailSettings> emailSettings)
         {
@@ -55,7 +49,5 @@ namespace CarRental_BE.Services
                 throw;
             }
         }
-
-
     }
 }

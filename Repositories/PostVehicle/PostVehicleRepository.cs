@@ -1,5 +1,4 @@
-﻿using CarRental_BE.Interfaces;
-using CarRental_BE.Models.PostVehicle;
+﻿using CarRental_BE.Models.PostVehicle;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 

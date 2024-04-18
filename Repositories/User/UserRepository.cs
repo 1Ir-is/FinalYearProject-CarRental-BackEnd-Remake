@@ -12,6 +12,7 @@ using System.Net.Http;
 using Microsoft.Data.SqlClient.Server;
 using Google.Apis.Auth;
 
+
 namespace CarRental_BE.Repositories.User
 {
     public class UserRepository : IUserRepository
@@ -64,12 +65,22 @@ namespace CarRental_BE.Repositories.User
                 .Select(u => new UserDTO
                 {
                     Name = u.Name,
-                    Avatar = u.Avatar
-                    // Include other properties you need
+                    Avatar = u.Avatar,
+                    Phone = u.Phone,
+                    Email = u.Email, 
+                    Address = u.Address,
+                    TrustPoint = u.TrustPoint 
+                                              
                 })
                 .FirstOrDefaultAsync();
 
             return user;
+        }
+
+
+        public async Task<Entities.User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<Entities.User> Login(LoginVM request)
@@ -165,17 +176,32 @@ namespace CarRental_BE.Repositories.User
         }
 
 
-        public async Task StoreResetKey(string email, string resetKey)
+        public async Task StoreResetKey(string email, string resetKey, DateTime timestamp)
         {
             // Store the reset key in the database along with the user's email and a timestamp
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user != null)
             {
                 user.ResetKey = resetKey;
-                user.ResetKeyTimestamp = DateTime.UtcNow;
+                user.ResetKeyTimestamp = timestamp;
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<(string ResetKey, DateTime? ResetKeyTimestamp)> GetResetKeyInfo(string email, string resetKey)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.ResetKey == resetKey);
+            if (user != null)
+            {
+                return (user.ResetKey, user.ResetKeyTimestamp);
+            }
+            else
+            {
+                // User not found or reset key does not match
+                return (null, null);
+            }
+        }
+
 
         public async Task<bool> VerifyResetKey(string email, string resetKey)
         {
@@ -212,8 +238,6 @@ namespace CarRental_BE.Repositories.User
                 throw; // Rethrow the exception to handle it at a higher level
             }
         }
-
-
 
         public async Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId)
         {

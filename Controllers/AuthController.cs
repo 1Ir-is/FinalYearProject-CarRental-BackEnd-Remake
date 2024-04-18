@@ -14,12 +14,14 @@ namespace CarRental_BE.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMailService _mailService;
+        private readonly ITokenService _tokenService;
 
 
-        public AuthController(IUserRepository userRepository, IMailService mailService)
+        public AuthController(IUserRepository userRepository, IMailService mailService, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _mailService = mailService;
+            _tokenService = tokenService;
         }
 
 
@@ -33,6 +35,10 @@ namespace CarRental_BE.Controllers
             {
                 return Unauthorized("Invalid email or password");
             }
+
+            // Generate token
+            var token = _tokenService.CreateToken(user);
+
             var responseData = new
             {
                 UserId = user.Id,
@@ -40,12 +46,14 @@ namespace CarRental_BE.Controllers
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.Phone,
-                Role = user.Role
+                Role = user.Role,
+                Token = token // Include token in response
             };
 
-            // Return response with user data and role
+            // Return response with user data and token
             return Ok(responseData);
         }
+
 
         [HttpPost("login-with-google")]
         public async Task<IActionResult> LoginWithGoogle([FromQuery] string googleEmail)
@@ -56,6 +64,10 @@ namespace CarRental_BE.Controllers
             {
                 return Unauthorized("Invalid email or password");
             }
+
+            // Generate token
+            var token = _tokenService.CreateToken(user);
+
             var responseData = new
             {
                 UserId = user.Id,
@@ -63,10 +75,11 @@ namespace CarRental_BE.Controllers
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.Phone,
-                Role = user.Role
+                Role = user.Role,
+                Token = token // Include token in response
             };
 
-            // Return response with user data and role
+            // Return response with user data and token
             return Ok(responseData);
         }
 
@@ -80,6 +93,9 @@ namespace CarRental_BE.Controllers
                 return BadRequest("Failed to login with Google");
             }
 
+            // Generate token
+            var token = _tokenService.CreateToken(user);
+
             var responseData = new
             {
                 UserId = user.Id,
@@ -87,9 +103,11 @@ namespace CarRental_BE.Controllers
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.Phone,
-                Role = user.Role
+                Role = user.Role,
+                Token = token // Include token in response
             };
 
+            // Return response with user data and token
             return Ok(responseData);
         }
         #endregion Login
@@ -105,8 +123,13 @@ namespace CarRental_BE.Controllers
                 return Conflict("User with this email already exists");
             }
 
-            return Ok("Registration successful!");
+            // Optionally, you can generate a token for the newly registered user
+            var user = await _userRepository.GetUserByEmail(model.Email);
+            var token = _tokenService.CreateToken(user);
+
+            return Ok(new { Message = "Registration successful!", Token = token });
         }
+
         #endregion Register
 
 
@@ -139,8 +162,9 @@ namespace CarRental_BE.Controllers
                 // Generate a unique reset key (you can use Guid or any other method)
                 string resetKey = Guid.NewGuid().ToString();
 
-                // Store the reset key in the database along with the user's email and a timestamp
-                await _userRepository.StoreResetKey(email, resetKey);
+                // Store the reset key and timestamp in the database
+                DateTime timestamp = DateTime.UtcNow; // Get current UTC time
+                await _userRepository.StoreResetKey(email, resetKey, timestamp);
 
                 // Read the content of the ResetPassword.html file
                 string filePath = Path.Combine("EmailHtml", "ResetPassword.html");
@@ -148,7 +172,6 @@ namespace CarRental_BE.Controllers
 
                 // Replace placeholders in the HTML content with actual values
                 htmlContent = htmlContent.Replace("{resetLink}", $"http://localhost:3000/reset-password/{email}/{resetKey}");
-
 
                 // Send the password reset email
                 await _mailService.SendEmailAsync(email, "Password Reset", htmlContent);
@@ -172,10 +195,13 @@ namespace CarRental_BE.Controllers
         {
             try
             {
-                // Verify the reset key from the database
-                var result = await _userRepository.VerifyResetKey(model.Email, model.ResetKey);
-                if (!result)
-                    return NotFound("Invalid or expired reset key");
+                // Check if reset key is valid and not expired
+                var resetKeyInfo = await _userRepository.GetResetKeyInfo(model.Email, model.ResetKey);
+                if (resetKeyInfo == (null, null) || (DateTime.UtcNow - resetKeyInfo.ResetKeyTimestamp.Value).TotalMinutes > 15)
+                {
+                    // Reset key is invalid or expired
+                    return BadRequest("Reset key is invalid or expired");
+                }
 
                 // Reset the user's password
                 await _userRepository.ResetPassword(model.Email, model.NewPassword);
@@ -188,6 +214,7 @@ namespace CarRental_BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
+
         #endregion Reset Password
 
     }
