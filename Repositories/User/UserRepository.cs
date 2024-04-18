@@ -292,7 +292,7 @@ namespace CarRental_BE.Repositories.User
  */
 
         public async Task<Entities.User> LoginWithGoogle(string token)
-{
+        {
             try
             {
                 var payload = await GoogleJsonWebSignature.ValidateAsync(token);
@@ -307,6 +307,12 @@ namespace CarRental_BE.Repositories.User
                     existingUser.Name = name;
                     existingUser.Avatar = avatar;
 
+                    // Check if ResetKey is null before updating
+                    if (existingUser.ResetKey == null)
+                    {
+                        existingUser.ResetKey = ""; // Set an empty string or any default value
+                    }
+
                     _context.Users.Update(existingUser);
                     await _context.SaveChangesAsync();
 
@@ -319,15 +325,14 @@ namespace CarRental_BE.Repositories.User
                     Name = name,
                     Email = email,
                     Role = ROLE_TYPE.USER,
-                    Avatar = avatar ?? "/user-content/default-user.png"
+                    Avatar = avatar ?? "/user-content/default-user.png",
+                    ResetKey = "" // Set an empty string or any default value
                 };
 
                 _context.Users.Add(newUser);
                 await _context.SaveChangesAsync();
 
                 return newUser;
-
-
             }
             catch (Exception ex)
             {
@@ -335,9 +340,5 @@ namespace CarRental_BE.Repositories.User
                 return null;
             }
         }
-
-
-
-
     }
 }
