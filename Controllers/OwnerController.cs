@@ -1,12 +1,14 @@
 ﻿using CarRental_BE.Models.PostVehicle;
 using CarRental_BE.Repositories.PostVehicle;
 using CarRental_BE.Repositories.RentVehicle;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRental_BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class OwnerController : ControllerBase
     {
         private readonly IPostVehicleRepository _postVehicleRepository;

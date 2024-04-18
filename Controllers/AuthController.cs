@@ -132,6 +132,29 @@ namespace CarRental_BE.Controllers
 
         #endregion Register
 
+        #region ToggleUserStatus
+        [HttpPost("toggle/{id}")]
+        public async Task<IActionResult> ToggleUserStatus(long id)
+        {
+            try
+            {
+                var success = await _userRepository.Toggle(id);
+
+                if (!success)
+                {
+                    return NotFound("User not found or failed to toggle status");
+                }
+
+                return Ok("User status toggled successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+        #endregion ToggleUserStatus
+
 
         #region ChangePassword
         [HttpPost("change-password")]
@@ -216,6 +239,31 @@ namespace CarRental_BE.Controllers
         }
 
         #endregion Reset Password
+
+        [HttpPost("contact")]
+        public async Task<IActionResult> SendMessage(ContactFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string subject = "New Contact Form Submission";
+            string body = $"Name: {model.Name}<br>Email: {model.Email}<br>Message: {model.Message}";
+
+            try
+            {
+                // Send email using MailService
+                await _mailService.SendEmailAsync("arsherwinphonguniverse@gmail.com", subject, body);
+                return Ok("Message sent successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log error and return error response
+                Console.WriteLine($"Error sending email: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
 
     }
 }

@@ -141,6 +141,16 @@ namespace CarRental_BE.Repositories.User
             return res;
         }
 
+        public async Task<bool> Toggle(long id)
+        {
+            var u = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            u.Status = !u.Status;
+            _context.Users.Update(u);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
 
         public async Task<bool> EditInfoUser(UserEditVM request)
         {

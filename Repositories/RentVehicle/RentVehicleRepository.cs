@@ -75,17 +75,18 @@ namespace CarRental_BE.Repositories.RentVehicle
             try
             {
                 var rentalDetails = await _context.UserRentVehicles
-                    .Include(urv => urv.PostVehicle) 
+                    .Include(urv => urv.PostVehicle)
                     .Where(urv => urv.PostVehicleId == vehicleId)
                     .Select(urv => new UserRentVehicleDTO
                     {
-                        userId = urv.UserId ?? 0, 
+                        userId = urv.UserId ?? 0,
                         Name = urv.Name,
                         Phone = urv.Phone,
                         Email = urv.Email,
                         Note = urv.Note,
                         StartDate = urv.StartDate,
                         EndDate = urv.EndDate,
+                        CreateDate = DateTime.Now,
                         TotalPrice = urv.TotalPrice,
                         VehicleName = urv.PostVehicle.VehicleName
                     })
@@ -98,6 +99,7 @@ namespace CarRental_BE.Repositories.RentVehicle
                 throw ex;
             }
         }
+
 
         public async Task<IEnumerable<RentedVehicleDTO>> GetAllVehiclesRentedByUserId(long userId)
         {

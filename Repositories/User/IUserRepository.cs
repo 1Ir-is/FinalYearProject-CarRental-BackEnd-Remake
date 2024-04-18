@@ -25,5 +25,6 @@ namespace CarRental_BE.Repositories.User
         Task StoreResetKey(string email, string resetKey, DateTime timestamp);
         Task<bool> VerifyResetKey(string email, string resetKey);
         Task ResetPassword(string email, string newPassword);
+        Task<bool> Toggle(long id);
     }
 }
