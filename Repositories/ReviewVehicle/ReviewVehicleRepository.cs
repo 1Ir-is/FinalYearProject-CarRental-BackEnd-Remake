@@ -2,7 +2,7 @@
 using CarRental_BE.Models.ReviewVehicle;
 using CarRental_BE.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
-
+using System.Linq;
 
 namespace CarRental_BE.Repositories.ReviewVehicle
 {
@@ -15,7 +15,7 @@ namespace CarRental_BE.Repositories.ReviewVehicle
             _context = context;
         }
 
-        public async Task AddReview(ReviewVehicleVM vm, long userId)
+        public async Task<UserReviewVehicle> AddReview(ReviewVehicleVM vm, long userId)
         {
             var postVehicle = await _context.PostVehicles.FindAsync(vm.PostVehicleId);
             if (postVehicle == null)
@@ -30,7 +30,8 @@ namespace CarRental_BE.Repositories.ReviewVehicle
                 Rating = vm.Rating,
                 Content = vm.Content,
                 Status = true,
-                TrustPoint = vm.TrustPoint
+                TrustPoint = vm.TrustPoint,
+                CreatedDate = DateTime.Now, // Set the CreatedDate property
             };
 
             await _context.UserReviewVehicles.AddAsync(review);
@@ -56,14 +57,33 @@ namespace CarRental_BE.Repositories.ReviewVehicle
                 _context.PostVehicles.Update(postVehicle);
                 await _context.SaveChangesAsync();
             }
+
+            // Return the created review with the createdDate included
+            return review;
         }
 
-        public async Task<IEnumerable<UserReviewVehicle>> GetReviewVehiclesForPost(long postVehicleId)
+
+
+        public async Task<IEnumerable<UserReviewVehicleDTO>> GetReviewVehiclesForPost(long postVehicleId)
         {
-            return await _context.UserReviewVehicles
+            var reviews = await _context.UserReviewVehicles
                 .Where(x => x.PostVehicleId == postVehicleId)
+                .Select(x => new UserReviewVehicleDTO
+                {
+                    Rating = x.Rating,
+                    Content = x.Content,
+                    TrustPoint = x.TrustPoint,
+                    UserName = x.User.Name,
+                    UserAvatar = x.User.Avatar,
+                    UserId = x.UserId,
+                    Date = x.CreatedDate // Assuming there's a property named CreatedDate in UserReviewVehicle representing the creation date
+                })
                 .ToListAsync();
+
+            return reviews;
         }
+
+
 
         public async Task<IEnumerable<UserReviewVehicle>> GetAllReviewVehicles()
         {

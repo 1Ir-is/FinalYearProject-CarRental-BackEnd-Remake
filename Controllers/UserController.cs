@@ -32,7 +32,7 @@ namespace CarRental_BE.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+/*        [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(long id)
         {
             try
@@ -49,7 +49,19 @@ namespace CarRental_BE.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }*/
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById(long userId)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound($"User with ID {userId} not found.");
+            }
+            return Ok(user);
         }
+
 
         [HttpGet("avatar/{userId}")]
         public async Task<IActionResult> GetUserAvatar(long userId)

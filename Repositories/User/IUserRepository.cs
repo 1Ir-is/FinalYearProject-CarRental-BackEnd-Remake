@@ -12,6 +12,7 @@ namespace CarRental_BE.Repositories.User
         Task<bool> EditInfoUser(UserEditVM request);
 
         Task<Entities.User> GetById(long id);
+        Task<UserDTO> GetUserById(long userId);
         Task<List<Entities.User>> GetAll();
         Task<bool> ChangePasswordUser(ChangePasswordVM vm);
         Task CreateApprovalApplication(ApprovalApplicationVM vm, long userId);

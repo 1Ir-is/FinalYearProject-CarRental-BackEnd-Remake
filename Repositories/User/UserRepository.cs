@@ -49,6 +49,29 @@ namespace CarRental_BE.Repositories.User
             return user;
         }
 
+        public async Task<UserDTO> GetUserById(long userId)
+        {
+            var user = await _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.PostVehicles)
+                .Include(u => u.FollowVehicles)
+                    .ThenInclude(fv => fv.PostVehicle)
+                .Include(u => u.UserRentVehicles)
+                    .ThenInclude(urv => urv.PostVehicle)
+                .Include(u => u.UserReviewVehicles)
+                    .ThenInclude(urv => urv.PostVehicle)
+                .Include(u => u.ApprovalApplication)
+                .Select(u => new UserDTO
+                {
+                    Name = u.Name,
+                    Avatar = u.Avatar
+                    // Include other properties you need
+                })
+                .FirstOrDefaultAsync();
+
+            return user;
+        }
+
         public async Task<Entities.User> Login(LoginVM request)
         {
             var user = await _context.Users

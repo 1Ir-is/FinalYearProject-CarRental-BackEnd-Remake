@@ -9,7 +9,7 @@ namespace CarRental_BE.Repositories.ReviewVehicle
 
         Task Toggle(long id);
 
-        Task AddReview(ReviewVehicleVM vm, long userId);
-        Task<IEnumerable<UserReviewVehicle>> GetReviewVehiclesForPost(long postVehicleId);
+        Task<UserReviewVehicle> AddReview(ReviewVehicleVM vm, long userId);
+        Task<IEnumerable<UserReviewVehicleDTO>> GetReviewVehiclesForPost(long postVehicleId);
     }
 }

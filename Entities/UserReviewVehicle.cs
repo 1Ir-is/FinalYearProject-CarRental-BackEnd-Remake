@@ -16,5 +16,6 @@ namespace CarRental_BE.Entities
         public int Rating { get; set; }
         public double TrustPoint { get; set; }
         public string Content { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
