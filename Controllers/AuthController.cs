@@ -248,13 +248,20 @@ namespace CarRental_BE.Controllers
                 return BadRequest(ModelState);
             }
 
-            string subject = "New Contact Form Submission";
-            string body = $"Name: {model.Name}<br>Email: {model.Email}<br>Message: {model.Message}";
-
             try
             {
+                // Read the content of the UserRequest.html file
+                string filePath = Path.Combine("EmailHtml", "UserRequest.html");
+                string htmlContent = await System.IO.File.ReadAllTextAsync(filePath);
+
+                // Replace placeholders in the HTML content with actual values
+                htmlContent = htmlContent.Replace("{name}", model.Name)
+                                         .Replace("{email}", model.Email)
+                                         .Replace("{message}", model.Message);
+
                 // Send email using MailService
-                await _mailService.SendEmailAsync("arsherwinphonguniverse@gmail.com", subject, body);
+                await _mailService.SendEmailAsync("arsherwinphonguniverse@gmail.com", "New Contact From User", htmlContent);
+
                 return Ok("Message sent successfully");
             }
             catch (Exception ex)
@@ -264,6 +271,7 @@ namespace CarRental_BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
+
 
     }
 }
