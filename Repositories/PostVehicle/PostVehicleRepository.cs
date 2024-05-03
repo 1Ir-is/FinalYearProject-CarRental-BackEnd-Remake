@@ -74,6 +74,7 @@ namespace CarRental_BE.Repositories.PostVehicle
 
             return postVehicle;
         }
+
         public async Task UpdatePostVehicle(long postId, UpdateVehicleVM postVehicleVM)
         {
             try
@@ -110,6 +111,21 @@ namespace CarRental_BE.Repositories.PostVehicle
             catch (Exception ex)
             {
                 throw new Exception($"Error updating post vehicle: {ex.Message}");
+            }
+        }
+
+        public async Task MarkVehicleAvailable(long postId)
+        {
+            var postVehicle = await _context.PostVehicles.FindAsync(postId);
+
+            if (postVehicle != null)
+            {
+                postVehicle.IsRented = false; // Set the status to available
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException("Post vehicle not found");
             }
         }
 

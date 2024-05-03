@@ -94,12 +94,13 @@ namespace CarRental_BE.Repositories.User
                 return null;
 
             // Ensure that user.Password is not null before calling BCrypt.Verify
-            if (user.Password != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (!string.IsNullOrEmpty(user.Password) && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return user;
             }
             return null;
         }
+
 
 
         public async Task<Entities.User> LoginWithGoogleEmail(string googleEmail)

@@ -100,5 +100,22 @@ namespace CarRental_BE.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving renters: {ex.Message}");
             }
         }
+
+        [HttpPost("mark-vehicle-available/{postId}")]
+        public async Task<IActionResult> MarkVehicleAvailable(long postId)
+        {
+            try
+            {
+                // Update the status of the post vehicle to mark it as available
+                await _postVehicleRepository.MarkVehicleAvailable(postId);
+                return Ok("Vehicle marked as available");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error marking vehicle as available: {ex.Message}");
+            }
+        }
+
+
     }
 }

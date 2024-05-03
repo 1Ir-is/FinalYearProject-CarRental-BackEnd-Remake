@@ -182,6 +182,13 @@ namespace CarRental_BE.Controllers
                     return BadRequest("Email address is required");
                 }
 
+                // Check if the email exists in the database
+                var user = await _userRepository.GetUserByEmail(email);
+                if (user == null)
+                {
+                    return BadRequest("Email address not found in our records");
+                }
+
                 // Generate a unique reset key (you can use Guid or any other method)
                 string resetKey = Guid.NewGuid().ToString();
 
@@ -207,6 +214,7 @@ namespace CarRental_BE.Controllers
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
+
 
 
         #endregion Forgot Password   

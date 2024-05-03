@@ -17,6 +17,7 @@
         public string? Address { get; set; }
         public string? PlaceId { get; set; }
         public bool? Status { get; set; } = false;
+        public bool? IsRented { get; set; } = false;
         public long? UserId { get; set; }
         public User? User { get; set; }
 

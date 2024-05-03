@@ -42,6 +42,13 @@ namespace CarRental_BE.Repositories.RentVehicle
                 rentVehicle.TotalPrice = 0; 
             }
 
+            // Update the IsRented status of the corresponding PostVehicle
+            var postVehicle = await _context.PostVehicles.FindAsync(vm.PostVehicleId);
+            if (postVehicle != null)
+            {
+                postVehicle.IsRented = true;
+            }
+
             await _context.UserRentVehicles.AddAsync(rentVehicle);
             await _context.SaveChangesAsync();
         }

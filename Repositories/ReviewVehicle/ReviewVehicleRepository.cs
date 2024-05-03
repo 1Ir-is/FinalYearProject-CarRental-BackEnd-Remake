@@ -68,7 +68,8 @@ namespace CarRental_BE.Repositories.ReviewVehicle
         public async Task<IEnumerable<UserReviewVehicleDTO>> GetReviewVehiclesForPost(long postVehicleId)
         {
             var reviews = await _context.UserReviewVehicles
-                .Where(x => x.PostVehicleId == postVehicleId)
+            .Where(x => x.PostVehicleId == postVehicleId && x.Status == true)
+
                 .Select(x => new UserReviewVehicleDTO
                 {
                     Rating = x.Rating,
@@ -83,6 +84,7 @@ namespace CarRental_BE.Repositories.ReviewVehicle
 
             return reviews;
         }
+
 
 
 
