@@ -21,7 +21,6 @@ namespace CarRental_BE.Controllers
         {
             _userRepository = userRepository;
             _mailService = mailService;
-            _tokenService = tokenService;
         }
 
 

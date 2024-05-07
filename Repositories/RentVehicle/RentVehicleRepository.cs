@@ -143,8 +143,6 @@ namespace CarRental_BE.Repositories.RentVehicle
                 throw ex;
             }
         }
-
-
     }
 }
 

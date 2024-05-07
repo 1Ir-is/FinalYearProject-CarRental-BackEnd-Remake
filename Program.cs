@@ -1,4 +1,4 @@
-using CarRental_BE.Interfaces;
+﻿using CarRental_BE.Interfaces;
 using CarRental_BE.Models.Auth;
 using CarRental_BE.Repositories.DBContext;
 using CarRental_BE.Repositories.FollowVehicle;
@@ -63,9 +63,13 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
-        )
+        ),
+        ValidateLifetime = true, // Kiểm tra thời gian hết hạn
+        ClockSkew = TimeSpan.FromMinutes(30) // Hết hạn chính xác sau 30 phút, không chấp nhận độ lệch thời gian
     };
 });
+
+
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSetting"));
 
